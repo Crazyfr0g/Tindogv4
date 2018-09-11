@@ -18,7 +18,7 @@
 
             <b-button @click="ShowSignUp" class="spacing">
                     Sign-Up 
-             </b-button>
+            </b-button>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -69,10 +69,10 @@
 
         <b-modal ref="myModalRefSignin" hide-footer title="Sign-In">
             <div class="d-block text-center">
-                <h3>Username:</h3>
+                <h3>Username</h3>
                 <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your username"></b-form-input>
 
-                <h3>Password:</h3>
+                <h3>Password</h3>
                 <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password"></b-form-input>
             </div>
             <b-btn class="mt-3" variant="outline-success" block @click="SigninUser">Enter</b-btn>
@@ -81,13 +81,13 @@
         
         <b-modal ref="myModalRefSignup" hide-footer title="Sign-Up">
           <div class="d-block text-center">
-              <h3>Username:</h3>
-              <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your username"></b-form-input>
+              <h3>Email</h3>
+              <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your email"></b-form-input>
 
-              <h3>Password:</h3>
-              <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password"></b-form-input>
+              <h3>Username</h3>
+              <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your username"></b-form-input>
 
-              <h3>Password:</h3>
+              <h3>Password</h3>
               <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password"></b-form-input>
 
           </div>
@@ -179,21 +179,21 @@
     {
       font-size: 30px;
     }
-  .deckClass
-  {
+    .deckClass
+    {
     margin-top:20px;
     margin-left:10px;
     margin-right:10px;
-  }
-  .deckClass header
-  {
+    }
+    .deckClass header
+    {
     font-size: 30px;
-  }
+    }
 
-  .Deck3
-  {
+    .Deck3
+    {
       margin: 0 auto;
-  }
+    }
 
   </style>
 

@@ -12,6 +12,12 @@ export default {
 
 
 <style>
+  
+  .paddingTop
+  {
+    padding-top: 76px;
+  }
+
   #HomeLogin
   {
     font-family: 'Courier New';
