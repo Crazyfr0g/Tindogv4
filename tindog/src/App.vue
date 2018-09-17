@@ -20,7 +20,7 @@ export default {
 
   #HomeLogin
   {
-    font-family: 'Courier New';
+    font-family: 'Century Gothic';
   }
 
   #Home #PicStyle #Pic

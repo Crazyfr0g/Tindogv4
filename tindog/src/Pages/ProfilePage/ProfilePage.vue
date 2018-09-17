@@ -1,5 +1,6 @@
 <template>
     <div id="Style">
+        <navbar/>
         <b-navbar toggleable="md" type="dark" variant="dark">
 
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
@@ -10,10 +11,19 @@
 
             <b-collapse is-nav id="nav_collapse" type="dark">
 
-                    <b-dropdown id="ddown-divider" text="Lix" class="m-2">
+                    <!-- <b-dropdown id="ddown-divider" text="Lix" class="m-2">
                             <b-dropdown-item-button>Profile</b-dropdown-item-button>
                             <b-dropdown-divider></b-dropdown-divider>
-                            <b-dropdown-item-button>Log-out</b-dropdown-item-button>
+                            <b-dropdown-item-button variant="primary">Notifications<b-badge>4</b-badge></b-dropdown-item-button>
+                            <b-dropdown-divider></b-dropdown-divider>
+                            <b-dropdown-item-button>Log-out</b-dropdown-item-button> -->
+                           
+        
+                            <!-- <div class="text-center">
+                                <b-button variant="primary">
+                                  Notifications <b-badge variant="light">4</b-badge>
+                                </b-button>
+                            </div> -->
                     </b-dropdown>
                     
                     <b-navbar-nav class="ml-auto" variant="light">
@@ -29,35 +39,103 @@
             <p class="titlePage">Profile</p>
         </div>
 
-        <div class="ImageStyle">  
-            <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> 
-            <p class="profileName">Lix Cassidy Billones &#x1F58B;</p>
+        <div class="clearfixMargin">
+
+            <div class="ImageStyle">  
+                <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
+                <p class="profile">Lix Cassidy Billones &#x1F58B;</p>
+                <p class="profile">Email: lixsalvador18@gmail.com</p>
+                <p class="profile">Location: Zamboang(Tetuan)</p>   
+            </div>
+            <!-- <p class="profile">Lix Cassidy Billones &#x1F58B;</p> -->
+
+     
+            <div class="ImageStyle2">  
+                <!-- <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br> -->
+                    <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
+                    <i class="fa fa-usd fa-3x" aria-hidden="true"></i>
+                    <i class="fa fa-cog fa-3x" aria-hidden="true"></i>   
+            </div>     
         </div>
-              
+       
+
+        
+
         
 
     </div>
 </template>
 
 <script>
+
+    import Navbar from '../../components/NavBar.vue'
         export default {
           data () {
             return {
               text: ''
             }
-          }
+          },
+
+          components:{
+        
+            Navbar
+         }
         }
 </script>
 
 <style>
+
+    .clearfixMargin
+    {
+        display: flex;
+    }
+
+    .ImageStyle
+    {
+        width: 50%;
+        padding-left:50px; 
+    }
+
+    .ImageStyle2
+    {
+        width: 50%;
+    }
     
-    .ImageStyle .profileName
+    .ImageStyle .profile
     {
         margin-top: 15px;
         text-align: center;
         font-size: 25px;
 
     }
+    .ImageStyle2 i{
+        padding-left: 50px;
+    }
+
+    /* .ImageStyle2 .profile
+    {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 25px;
+
+    } */
+
+    .message
+    {
+        width: 30%;
+    }
+
+
+     /* .ImageStyle2 .profile
+    {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 25px;
+    }
+    .ImageStyle2
+    {
+        width: 50%;
+    } */
 
     .textarea .titlePage
     {

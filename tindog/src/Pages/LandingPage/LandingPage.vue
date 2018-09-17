@@ -1,22 +1,22 @@
 <template>
     <div id="Style">
         
-      <b-navbar toggleable="md" type="dark" variant="dark">
+      <b-navbar toggleable="md" type="dark" variant="info">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-navbar-brand href="#" id="LogoStyle" variant="dark"><p class="text-light font" >Tindog &#128021;</p></b-navbar-brand>
-        <b-nav-form>
+        <!-- <b-nav-form>
               <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Types of Dogs"/>
-              <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-        </b-nav-form>
+              <b-button size="sm" class="my-2 my-sm-0" type="submi"t variant="light">Search</b-button>
+        </b-nav-form> -->
 
         <b-collapse is-nav id="nav_collapse" type="dark">
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" variant="dark">
-            <b-button @click="ShowSignIn" class="spacing">
+            <b-button @click="ShowSignIn" class="spacing" variant="light">
                     Sign-In
             </b-button>
 
-            <b-button @click="ShowSignUp" class="spacing">
+            <b-button @click="ShowSignUp" class="spacing" variant="light">
                     Sign-Up 
             </b-button>
           </b-navbar-nav>
@@ -69,58 +69,117 @@
 
         <b-modal ref="myModalRefSignin" hide-footer title="Sign-In">
             <div class="d-block text-center">
-                <h3>Username</h3>
-                <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your username"></b-form-input>
+                <h3>Email</h3>
+                <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your email" v-model="signinEmail"></b-form-input>
 
                 <h3>Password</h3>
-                <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password"></b-form-input>
+                <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password" v-model="signinPassword"></b-form-input>
             </div>
-            <b-btn class="mt-3" variant="outline-success" block @click="SigninUser">Enter</b-btn>
+            <b-btn class="mt-3" variant="outline-success" block @click="SigninUser">Sign-in</b-btn>
         </b-modal>
 
         
         <b-modal ref="myModalRefSignup" hide-footer title="Sign-Up">
           <div class="d-block text-center">
-              <h3>Email</h3>
-              <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your email"></b-form-input>
 
-              <h3>Username</h3>
-              <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your username"></b-form-input>
+            <h3>Firstname</h3>
+            <b-form-input id="" size="sm" type="text" placeholder="Enter your firstname" v-model="signupFirstname"></b-form-input>
+  
+            <h3>Lastname</h3>
+            <b-form-input id="" size="sm" type="text" placeholder="Enter your lastname" v-model="signupLastname"></b-form-input>
 
-              <h3>Password</h3>
-              <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password"></b-form-input>
+            <h3>Email</h3>
+            <b-form-input id="" size="sm" type="text" placeholder="Enter your email" v-model="signupEmail"></b-form-input>
+
+            <h3>Password</h3>
+            <b-form-input id="" size="sm" type="password" placeholder="Enter your password" v-model="signupPassword"></b-form-input>
 
           </div>
-          <b-btn class="mt-3" variant="outline-success" block @click="hideSignUp">Enter</b-btn>
+          <b-btn class="mt-3" variant="outline-success" block @click="signupUser">Sign-up</b-btn>
       </b-modal>
 
     </div>
   </template>
 
     <script>
-        
-    export default 
-    {
-        methods:
+
+    import firebase from 'firebase'
+     export default 
+
         {
-        ShowSignIn () 
-        {
-            this.$refs.myModalRefSignin.show()
-        },
-        ShowSignUp ()
-        {
-            this.$refs.myModalRefSignup.show()
-        },
-        SigninUser ()
-        {
-            this.$router.push('/Home')
-        },
-        hideSignUp ()
-        {
-            this.$refs.myModalRefSignup.hide()
-        },
+            data() {
+                return {
+                    signupEmail: '',
+                    signupPassword: '',
+                    signinEmail: '',
+                    signinPassword: '',
+                }
+            },
+             methods:
+             {
+                ShowSignIn () 
+                {
+                    this.$refs.myModalRefSignin.show()
+                },
+
+                ShowSignUp ()
+                {
+                    this.$refs.myModalRefSignup.show()
+                },
+
+                SigninUser ()
+                {
+                    let logEmail = this.signinEmail
+                    let logPass = this.signinPassword
+
+                    
+                    firebase.auth().signInWithEmailAndPassword(logEmail, logPass)
+                    .then((user) => {
+                        this.$router.push('/Home')
+                    })
+                    .catch(function(error) {
+                    // Handle Errors here.
+                         var errorCode = error.code;
+                         var errorMessage = error.message;
+                         console.log(error)
+                    // ...
+                    });
+
+                    this.signinEmail = ""
+                    this.signinPassword = ""
+                },
+
+                signupUser ()
+                {
+                    let signFirstname = this.signupFirstname
+                    let signLastname = this.signupLastname
+                    let signEmail = this.signupEmail
+                    let signPass = this.signupPassword
+
+                    firebase.auth().createUserWithEmailAndPassword(signEmail, signPass).then((user) => {
+
+                        firebase.auth().currentUser.updateProfile({
+                            displayName: `${signFirstname} ${signLastname}`,
+                            displayEmail: `${signEmail}`
+
+                        })
+
+                        let uid = firebase.auth().currentUser.uid
+                        firebase.database().ref(`Users/${uid}`).set({
+                            firstname: signFirstname,
+                            lastname: signLastname,
+                            email: signEmail,
+                            password: signPass
+                        })
+                    
+                    });
+
+                    this.signupEmail = ""
+                    this.signupPassword = ""
+                    this.$refs.myModalRefSignup.hide()
+                }
+            }
         }
-    }
 
     </script>
   

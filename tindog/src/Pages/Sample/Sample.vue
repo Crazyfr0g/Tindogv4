@@ -2,7 +2,7 @@
         <div id="Style" class="paddingTop">
             <navbar/>
             <div class="textarea">
-                <p class="titlePage">Newsfeed</p>
+                <p class="titlePage">Breeding</p>
             </div> 
 
             <div class="fixedIcon">
@@ -27,29 +27,58 @@
                     </div>
                 </div>
             </b-modal>
-           
-            <div class="bcardstyle">
-                <b-card class="bmediaStyle" v-for='(feed, i) in feeds' :key="i">
-                    <b-media>
-                        <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
-                            <h5 class="mt-0">{{ feed.name }}</h5>
-                        <b-img center src="https://picsum.photos/300/150/?image=41" fluid alt="Fluid image" class="imageStyle"/>
-    
-                        <p>{{ feed.content }}</p>
-                            
-                    </b-media>
 
-                    <div class="media-button">
+            <b-card v-for='(feed, i) in feeds' :key="i" class="bcardStyle"> 
+                <div class="clearfixMargin">
+
+                    <div class="bcardContent1"> 
+                        <b-media> 
+                            <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
+                            <h5 class="mt-0"> {{ feed.name }}</h5>
+                            <b-img center src="https://picsum.photos/300/150/?image=41" fluid alt="Fluid image" class="imageStyles"/>
+                        </b-media> 
+
+                        
+                        <div class="media-button">
                             <b-button class="d-inline" variant="outline-success">Like</b-button>
                             <b-button class="d-inline" variant="outline-danger">Dislike</b-button>
+                        </div>
                     </div>
-     
-                </b-card>
-            </div>
+             
+                    <div class="bcardContent2">  
+                        <p>Name of dog: Andie </p>
+                        <p>Breed of dog: Beagle</p>
+                        <p>Age of dog: 1 year 4 months</p>
+                        <p>Sex: Female </p>
+
+                        <div class="messageStyle">
+                            <b-button class="messageOwner" @click="clickMessage">Message owner</b-button>
+                        </div>    
+                    </div>      
+        
+                </div>
+            </b-card>   
+
+            <b-modal ref="messageSend" hide-footer title="Message Owner">
+                    <div class="d-block text-center">
+                        <b-form-textarea id=""
+                            v-model="text"
+                            placeholder="Enter something"
+                            :rows="3"
+                            :max-rows="6"
+                            class="textareaDesign">
+                        </b-form-textarea>
+        
+                        <div class="textarea-button">
+                            <b-button class="d-inline" variant="outline-success" @click="sendMessage">Send</b-button>
+                            <b-button class="d-inline" variant="outline-danger" @click="cancelMessage">Cancel</b-button>
+                        </div>
+                    </div>
+            </b-modal>
                   
     
         </div>
-</template>
+    </template>
     
     <script>
         import firebase from 'firebase'
@@ -81,8 +110,7 @@
                          })
                       })
                         this.feeds = feedArray
-                  }) 
-
+                  })
               },
     
              methods:{
@@ -97,11 +125,10 @@
                         let contentPicture = this.file
                         let messageFeed = this.text
                         let name = 'Cassidy'
-                        let uid = firebase.auth().currentUser.uid
                         console.log(this.file)
     
-                        // var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
-                        
+                        var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
+    
                         firebase.database().ref('Feeds').push({ 
                             
                            content: messageFeed,
@@ -110,7 +137,6 @@
                         .then(post => {
                             this.text = ''
                             this.$refs.addNewfeeds.hide()
-                            
                         })
                     },
 
@@ -119,19 +145,73 @@
                         this.$refs.addNewfeeds.hide()
                     },
 
-                getFileName() {
+                clickMessage()
+                    {
+                        this.$refs.messageSend.show()
+                    },
+
+                cancelMessage()
+                    {
+                        this.$refs.messageSend.hide()
+                    },
+
+                getFileName() 
+                    {
                         let file = document.getElementById('file')
                     //To display the file name
                         this.fileName = file.files[0].name
                         console.log(file)
-                },
-    
+                    },
             }
             
         }
     </script>
     
     <style>
+
+        .bcardStyle
+        {
+            width: 75%;
+            margin: 0 auto;
+            margin-bottom: 20px;
+           
+        }
+
+        .clearfixMargin
+        {
+            display: flex;
+        }
+
+        .bcardContent1
+        {
+            width: 50%;
+
+        }
+
+        .bcardContent1 .imageStyles
+        {
+            padding-left:50px; 
+        }
+
+
+        .bcardContent2
+        {
+            width: 50%;
+            padding-left: 50px; 
+        }
+
+
+        .messageStyle .messageOwner
+        {
+            width: 480px;
+            margin: 0 auto;
+        }
+
+        .bcardContent2 p
+        {
+            font-weight: bold;
+        }
+    
     
         .textarea .titlePage
         {
@@ -148,27 +228,26 @@
             margin-right: 20px;
         }
     
-        /* .style
-        {
-            margin-top: 30px;
-        } */
 
-         .fixedIcon i:hover{
-        transform: translate(0px, -2px);
+        .fixedIcon i:hover{
+            transform: translate(0px, -2px);
         }
 
         .fixedIcon i
         {
-        transition: all 300ms ease-in-out;
+            transition: all 300ms ease-in-out;
         }
 
         .fixedIcon
         {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        z-index: 99;
-    
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            margin-top: 45%;
+            margin-right: 30px;
+            text-align: right;
         }
     
         .textarea
@@ -177,23 +256,16 @@
             margin: 0 auto;
             margin-top: 40px;
             margin-bottom: 30px;
-    
         }
     
-        .bcardstyle .bmediaStyle .imageStyle
-        {
-            margin: 0 auto;
-            height: 200px;
-            margin-bottom: 20px;
-    
-        }
-    
-        .bcardstyle
+        .bmediaStyle
         {
             width: 75%;
             margin: 0 auto;
+            margin-bottom: 20px;
+            display: flex;
         }
-    
+
         .bcardstyle .bmediaStyle
         {
             margin-bottom: 20px;
@@ -210,8 +282,4 @@
         }
     
     </style>
-    
-    
-    
-    
     

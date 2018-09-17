@@ -4,6 +4,13 @@ import LandingPage from '@/Pages/LandingPage/LandingPage'
 import HomePage from '@/Pages/HomePage/HomePage'
 import SellingPage from '@/Pages/SellingPage/SellingPage'
 import ProfilePage from '@/Pages/ProfilePage/ProfilePage'
+import NotificationPage from '@/Pages/NotificationPage/NotificationPage'
+import BreedingPage from '@/Pages/BreedingPage/BreedingPage'
+import AccessoriesPage from '@/Pages/AccessoriesPage/AccessoriesPage'
+
+import Sample from '@/Pages/Sample/Sample'
+import SampleProf from '@/Pages/Sample/SampleProfile'
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -34,6 +41,36 @@ export default new Router({
       name: 'ProfilePage',
       component: ProfilePage
     },
+
+    {
+      path: '/Sample2',
+      name: 'Sample',
+      component: SampleProf
+    },
+
+    {
+      path: '/Notification',
+      name: 'NotificationPage',
+      component: NotificationPage
+    },
+
+    {
+      path: '/Breeding',
+      name: 'BreedingPage',
+      component: BreedingPage
+    },
+
+    {
+      path: '/Accessories',
+      name: 'AccessoriesPage',
+      component: AccessoriesPage
+    },
+
+    {
+      path: '/Sample',
+      name: 'Sample',
+      component: Sample
+    }
 
   ]
 })

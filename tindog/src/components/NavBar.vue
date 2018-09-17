@@ -1,51 +1,109 @@
 <template>
     <div class="fixed">
-        <b-navbar toggleable="md" type="dark" variant="dark">
+        <b-navbar toggleable="md" type="dark" variant="info">
 
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
             
                 <b-navbar-brand href="#" id="LogoStyle" variant="dark">
-                  <p class="text-light font">Tindog &#128021;</p>
+                  <p class="text-light font" @click="HomePage">Tindog &#128021;</p>
                 </b-navbar-brand>
 
             <b-collapse is-nav id="nav_collapse" type="dark">
 
-                    <b-dropdown id="ddown-divider" text="Lix" class="m-2">
+                    <b-dropdown id="down-divider" :text="displayName" class="m-2" variant="light">
+
                             <b-dropdown-item-button @click="ProfilePage">Profile</b-dropdown-item-button>
                             <b-dropdown-divider></b-dropdown-divider>
+                            <!-- <b-dropdown-item-button @click="NotificationPage">Notifications<b-badge>4</b-badge></b-dropdown-item-button> -->
                             <b-dropdown-item-button>Log-out</b-dropdown-item-button>
                     </b-dropdown>
+
                     
                     <b-navbar-nav class="ml-auto" variant="light">
-                            <b-nav-item><p class="text-light">Newsfeed</p></b-nav-item>
-                           <b-nav-item><p class="text-light" @click="SellingPage" to="/Selling">Selling/Buying</p></b-nav-item></router-link> 
-                            <b-nav-item><p class="text-light">Breeding</p></b-nav-item> 
+                        <!-- <div class="navStyle"> -->
+                            <b-nav-item><p class="text-light" @click="HomePage">Newsfeed</p></b-nav-item>
+                            <b-nav-item><p class="text-light" @click="SellingPage">Dog Store</p></b-nav-item></router-link> 
+                            <b-nav-item><p class="text-light" @click="AccessoriesPage">Accessories</p></b-nav-item> 
+                            <b-nav-item><p class="text-light" @click="BreedingPage">Breeding</p></b-nav-item> 
+                        <!-- </div>   -->
                     </b-navbar-nav>
                     
             </b-collapse>
         </b-navbar>
+
+        <!-- <notification-page/> -->
+        
     </div>
 </template>
 
 <script>
-    export default {
+
+    import firebase from 'firebase'
+
+     export default {
+        
+        data()
+        {
+            return{
+                displayName: ""
+            }    
+        },
+
+        created()
+        {
+            let displayName = firebase.auth().currentUser.displayName
+            this.displayName = displayName
+        },
+
         methods:
           {
+
+            HomePage()
+            {
+                this.$router.push('/Home')
+            },
+
             SellingPage ()
-              {
-                  this.$router.push('/Selling')
-              },
+            {
+                this.$router.push('/Selling')
+            },
 
             ProfilePage()
             {
-                this.$router.push('/Profile')
-            }
+                this.$router.push('/Sample2')
+            },
+
+            BreedingPage()
+            {
+                this.$router.push('/Sample')
+            },
+
+            NotificationPage()
+            {
+                this.$router.push('/Notification')
+            },
+
+            AccessoriesPage()
+            {
+                this.$router.push('/Accessories')
+            },
+
+
+            
           }
     }
 
 </script>
 
 <style>
+    .ml-auto p:hover{
+        transform: translate(0px, -2px);
+    }
+
+    .ml-auto p
+    {
+        transition: all 300ms ease-in-out;
+    }
     .fixed
     {
         position: fixed;
