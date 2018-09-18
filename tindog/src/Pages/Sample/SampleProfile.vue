@@ -183,7 +183,7 @@
                 created()
                 {
                     let displayName = firebase.auth().currentUser.displayName
-                    let displayEmail = firebase.auth().currentUser.displayEmail
+                    let displayEmail = firebase.auth().currentUser.email
 
                     this.displayName = displayName
                     this.displayEmail = displayEmail

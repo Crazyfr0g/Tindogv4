@@ -5,9 +5,9 @@
                 <p class="titlePage">Newsfeed</p>
             </div> 
 
-            <div class="fixedIcon">
+            <!-- <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
-            </div>
+            </div> -->
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                 <div class="d-block text-center">
@@ -60,71 +60,98 @@
                 Navbar
             },
     
-              data () 
-              {
-                return {
-                  text: '',
-                  file: null,
-                  feeds: []
-                }
-              },
-    
-              created(){
-                  firebase.database().ref('Feeds').on('value',snap => {
-                    let feedArray = []
-                      snap.forEach(childSnap => {
-                        let valName = childSnap.val().name
-                        let valContent = childSnap.val().content
-                        feedArray.push({ 
-                            name: valName,
-                            content: valContent
-                         })
-                      })
-                        this.feeds = feedArray
-                  }) 
-
-              },
-    
-             methods:{
-
-                addfeed()
-                    {
-                        this.$refs.addNewfeeds.show()
-                    },
-
-                postFeed()
-                    {
-                        let contentPicture = this.file
-                        let messageFeed = this.text
-                        let name = 'Cassidy'
-                        let uid = firebase.auth().currentUser.uid
-                        console.log(this.file)
-    
-                        // var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
-                        
-                        firebase.database().ref('Feeds').push({ 
-                            
-                           content: messageFeed,
-                           name
-                        })
-                        .then(post => {
-                            this.text = ''
-                            this.$refs.addNewfeeds.hide()
-                            
-                        })
-                    },
-
-                cancelPost()
-                    {
-                        this.$refs.addNewfeeds.hide()
-                    },
-
-                getFileName() {
-                        let file = document.getElementById('file')
-                    //To display the file name
-                        this.fileName = file.files[0].name
-                        console.log(file)
+                data () 
+                {
+                    return {
+                    text: '',
+                    file: null,
+                    feeds: []
+                    }
                 },
+        
+                created()
+                {
+                    let displayName = firebase.auth().currentUser.displayName
+                    let displayEmail = firebase.auth().currentUser.email
+
+                    this.displayEmail = displayEmail
+                    this.displayName = displayName
+
+                    // firebase.database().ref('Feeds').on('value',snap => {
+                    //     let feedArray = []
+                    //     snap.forEach(childSnap => {
+                    //         let valName = childSnap.val().name
+                    //         let valContent = childSnap.val().content
+                    //         feedArray.push({ 
+                    //             name: valName,
+                    //             content: valContent
+                    //         })
+                    //     })
+                    //         this.feeds = feedArray
+                    // }) 
+
+                    firebase.database().ref('Postfeed').on('value',snap => {
+                        let feedArray = []
+                        snap.forEach(childSnap => {
+                            let valName = childSnap.val().fullname
+                            let valContent = childSnap.val().content
+                            feedArray.push({ 
+                                name: valName,
+                                content: valContent
+                            })
+                        })
+                            this.feeds = feedArray
+                    }) 
+
+                },
+        
+                methods:{
+
+                    addfeed()
+                        {
+                            this.$refs.addNewfeeds.show()
+                        },
+
+                    postFeed()
+                        {
+                            // let contentPicture = this.file
+                            let messageFeed = this.text
+                            let name = this.displayName
+                            let email = this.displayEmail
+                            let uid = firebase.auth().currentUser.uid
+                            // console.log(this.file)
+        
+                            // var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
+                            //     firebase.database().ref(`Postfeed/${uid}`).set({
+                            //         content: messageFeed,
+                            //         fullname: name,
+                            //         email: email,
+                            //  })
+                            
+                            firebase.database().ref('Postfeed').push({ 
+                                    uid: uid,
+                                    content: messageFeed,
+                                    fullname: name,
+                                    email: email,
+                            })
+                            .then(post => {
+                                this.text = ''
+                                this.$refs.addNewfeeds.hide()
+                                
+                            })
+                        },
+
+                    cancelPost()
+                        {
+                            this.$refs.addNewfeeds.hide()
+                        },
+
+                    getFileName() {
+                            let file = document.getElementById('file')
+                        //To display the file name
+                            this.fileName = file.files[0].name
+                            console.log(file)
+                    },
     
             }
             

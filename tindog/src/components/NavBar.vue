@@ -4,6 +4,11 @@
 
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
             
+                <div class="fixedIcon">
+                    <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
+                </div>
+    
+            
                 <b-navbar-brand href="#" id="LogoStyle" variant="dark">
                   <p class="text-light font" @click="HomePage">Tindog &#128021;</p>
                 </b-navbar-brand>
@@ -45,15 +50,24 @@
         data()
         {
             return{
-                displayName: ""
+                displayName: "",
+                displayEmail: ""
             }    
         },
 
         created()
         {
             let displayName = firebase.auth().currentUser.displayName
+
             this.displayName = displayName
+        
         },
+
+        // created()
+        // {
+        //     let displayEmail = firebase.auth().currentUser.displayEmail
+        //     this.displayEmail = displayEmail
+        // },
 
         methods:
           {
@@ -111,5 +125,24 @@
         left: 0;
         right: 0;
         z-index: 99;
+    }
+
+    .fixedIcon i:hover
+    {
+    transform: translate(0px, -2px);
+    }
+
+    .fixedIcon i
+    {
+    transition: all 300ms ease-in-out;
+    }
+
+    .fixedIcon
+    {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 99;
+
     }
 </style>

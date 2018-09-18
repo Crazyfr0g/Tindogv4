@@ -159,17 +159,22 @@
                     firebase.auth().createUserWithEmailAndPassword(signEmail, signPass).then((user) => {
 
                         firebase.auth().currentUser.updateProfile({
-                            displayName: `${signFirstname} ${signLastname}`,
-                            displayEmail: `${signEmail}`
-
+                            
+                            displayName: `${signFirstname} ${signLastname}`
+                        
                         })
 
+                        // firebase.auth().currentUser.email({
+
+                        //     displayEmail: `${signEmail}`
+                        // })
+
                         let uid = firebase.auth().currentUser.uid
-                        firebase.database().ref(`Users/${uid}`).set({
-                            firstname: signFirstname,
-                            lastname: signLastname,
-                            email: signEmail,
-                            password: signPass
+                            firebase.database().ref(`Users/${uid}`).set({
+                                firstname: signFirstname,
+                                lastname: signLastname,
+                                email: signEmail,
+                                password: signPass
                         })
                     
                     });

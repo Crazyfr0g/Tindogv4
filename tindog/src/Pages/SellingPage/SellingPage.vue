@@ -5,9 +5,9 @@
                 <p class="titlePage">Dogs</p>
             </div> 
 
-            <div class="fixedIcon">
+            <!-- <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
-            </div>
+            </div> -->
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                 <div class="d-block text-center">
