@@ -1,16 +1,48 @@
 <template>
         <div id="Style" class="paddingTop">
-            <navbar/>
+            <navbar/>   
             <div class="textarea">
                 <p class="titlePage">Dog Accessories</p>
             </div> 
-<!-- 
-            <div class="fixedIcon">
+
+            <b-navbar toggleable="md" class="navbarStyle">             
+                <b-navbar-nav class="navStyle">
+                        <!-- <div class="navStyle"> -->
+                            <b-nav-item><p class="text-dark" @click="sellCage">Cage</p></b-nav-item>
+                            <b-nav-item><p class="text-dark" @click="sellFood">Food</p></b-nav-item>
+                            <b-nav-item><p class="text-dark" @click="sellTag">Tag</p></b-nav-item> 
+                            <b-nav-item><p class="text-dark" @click="sellChain">Chain</p></b-nav-item>
+                            <b-nav-item><p class="text-dark" @click="sellClothes">Clothes</p></b-nav-item> 
+                        <!-- </div>   -->
+                </b-navbar-nav>
+            </b-navbar>
+
+            <!-- <navbar/> -->
+            <sell-cage v-if="sellcageDisplay"/> 
+            <sell-food v-if="sellfoodDisplay"/> 
+            <sell-chain v-if="sellchainDisplay"/> 
+            <sell-tag v-if="selltagDisplay"/>
+            <sell-clothes v-if="sellclothesDisplay"/>
+
+            <!-- <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
             </div> -->
-
+<!-- 
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                 <div class="d-block text-center">
+
+                    <h3>Name of Product</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
+        
+                    <h3>Breed of dog</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter breed of dog" v-model="breedofDog"></b-form-input>
+
+                    <h3>Age of dog</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
+
+                    <h3>Sex</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
+
                     <b-form-textarea id=""
                         v-model="text"
                         placeholder="Enter something"
@@ -26,40 +58,10 @@
                         <b-button class="d-inline" variant="outline-danger" @click="cancelPost">Cancel</b-button>
                     </div>
                 </div>
-            </b-modal>
+            </b-modal> -->
 
-            <b-card v-for='(feed, i) in feeds' :key="i" class="bcardStyle"> 
-                <div class="clearfixMargin">
 
-                    <div class="bcardContent1"> 
-                        <b-media> 
-                            <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
-                            <h5 class="mt-0"> {{ feed.name }}</h5>
-                            <b-img center src="https://picsum.photos/300/150/?image=41" fluid alt="Fluid image" class="imageStyles"/>
-                        </b-media> 
-
-                        
-                        <div class="media-button">
-                            <b-button class="d-inline" variant="outline-success">Like</b-button>
-                            <b-button class="d-inline" variant="outline-danger">Dislike</b-button>
-                        </div>
-                    </div>
-             
-                    <div class="bcardContent2">  
-                        <p>Name of dog: Andie </p>
-                        <p>Breed of dog: Beagle</p>
-                        <p>Age of dog: 1 year 4 months</p>
-                        <p>Sex: Female </p>
-
-                        <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage">Message owner</b-button>
-                        </div>    
-                    </div>      
-        
-                </div>
-            </b-card>   
-
-            <b-modal ref="messageSend" hide-footer title="Message Owner">
+            <b-modal ref="messageSend" hide-footer title="Message Owner" no-close-on-backdrop>
                     <div class="d-block text-center">
                         <b-form-textarea id=""
                             v-model="text"
@@ -83,91 +85,181 @@
     <script>
         import firebase from 'firebase'
         import Navbar from '../../components/NavBar.vue'
+        import SellCage from '../../components/sellCage.vue'
+        import SellFood from '../../components/sellFood.vue'
+        import SellTag from '../../components/sellTag.vue'
+        import SellChain from '../../components/sellChain.vue'
+        import SellClothes from '../../components/sellClothes.vue'
+
+        // import NavbarAccessories from '../../components/NavbarAccessories.vue'
     
-            export default {
-            components:{
-                Navbar
-            },
-    
-              data () 
-              {
+        export default {
+        components:{
+            Navbar,
+            SellCage,
+            SellFood,
+            SellTag,
+            SellChain,
+            SellClothes
+        },
+
+            data () 
+            {
                 return {
-                  text: '',
-                  file: null,
-                  feeds: []
+                    text: '',
+                    file: null,
+                    feeds: [],
+                    sellcageDisplay: true,
+                    sellfoodDisplay: false,
+                    sellchainDisplay: false,
+                    selltagDisplay: false,
+                    sellclothesDisplay: false
+                    
                 }
-              },
-    
-              created(){
-                  firebase.database().ref('Feeds').on('value',snap => {
-                    let feedArray = []
-                      snap.forEach(childSnap => {
-                        let valName = childSnap.val().name
-                        let valContent = childSnap.val().content
-                        feedArray.push({ 
-                            name: valName,
-                            content: valContent
-                         })
-                      })
-                        this.feeds = feedArray
-                  })
-              },
-    
-             methods:{
+            },
 
-                addfeed()
-                    {
-                        this.$refs.addNewfeeds.show()
-                    },
-
-                postFeed()
-                    {
-                        let contentPicture = this.file
-                        let messageFeed = this.text
-                        let name = 'Cassidy'
-                        console.log(this.file)
-    
-                        var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
-    
-                        firebase.database().ref('Feeds').push({ 
-                            
-                           content: messageFeed,
-                           name
+            created(){
+                firebase.database().ref('Feeds').on('value',snap => {
+                let feedArray = []
+                    snap.forEach(childSnap => {
+                    let valName = childSnap.val().name
+                    let valContent = childSnap.val().content
+                    feedArray.push({ 
+                        name: valName,
+                        content: valContent
                         })
-                        .then(post => {
-                            this.text = ''
-                            this.$refs.addNewfeeds.hide()
-                        })
-                    },
+                    })
+                    this.feeds = feedArray
+                })
+            },
 
-                cancelPost()
+            methods:
+            {
+
+            addfeed()
+                {
+                    this.$refs.addNewfeeds.show()
+                },
+
+            postFeed()
+                {
+                    let contentPicture = this.file
+                    let messageFeed = this.text
+                    let name = 'Cassidy'
+                    console.log(this.file)
+
+                    var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
+
+                    firebase.database().ref('Feeds').push({ 
+                        
+                        content: messageFeed,
+                        name
+                    })
+                    .then(post => 
                     {
+                        this.text = ''
                         this.$refs.addNewfeeds.hide()
-                    },
+                    })
+                },
 
-                clickMessage()
-                    {
-                        this.$refs.messageSend.show()
-                    },
+            cancelPost()
+                {
+                    this.$refs.addNewfeeds.hide()
+                },
 
-                cancelMessage()
-                    {
-                        this.$refs.messageSend.hide()
-                    },
+            clickMessage()
+                {
+                    this.$refs.messageSend.show()
+                },
 
-                getFileName() 
-                    {
-                        let file = document.getElementById('file')
-                    //To display the file name
-                        this.fileName = file.files[0].name
-                        console.log(file)
-                    },
+            cancelMessage()
+                {
+                    this.$refs.messageSend.hide()
+                },
+
+            sellCage()
+                {
+                this.sellcageDisplay = true
+                this.sellfoodDisplay = false
+                this.sellchainDisplay = false
+                this.selltagDisplay = false
+                this.sellclothesDisplay = false
+                },
+            sellFood()
+                {
+                this.sellfoodDisplay = true
+                this.sellcageDisplay = false
+                this.sellchainDisplay = false
+                this.selltagDisplay = false
+                this.sellclothesDisplay = false
+                },
+            sellTag()
+                {
+                this.selltagDisplay = true
+                this.sellfoodDisplay = false
+                this.sellchainDisplay = false
+                this.sellcageDisplay = false
+                this.sellclothesDisplay = false
+                },
+            sellChain()
+                {
+                this.sellchainDisplay = true
+                this.sellfoodDisplay = false
+                this.sellcageDisplay = false
+                this.selltagDisplay = false
+                this.sellclothesDisplay = false
+                },
+            sellClothes()
+                {
+                this.sellclothesDisplay = true
+                this.sellchainDisplay = false
+                this.sellfoodDisplay = false
+                this.sellcageDisplay = false
+                this.selltagDisplay = false
+                },           
             }
-            
-        }
+    }
     </script>
     
     <style>
+
+        .navbarStyle
+        {
+            border-style:groove; 
+            width: 700px;
+            margin: 0 auto;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .navStyle
+        {
+            margin:0 auto;
+        }
+
+        .navbarStyle p
+        {
+            margin-bottom: 0px;
+        }
+        .navStyle p
+        {
+            margin-right: 30px;
+            margin-left: 30px;
+            text-decoration: none;
+            color: black;
+            font-size: 20px;
+        }
+
+        .navStyle .text-dark:hover
+        {
+            transform: translate(0px, -2px);
+        }
+
+        .navStyle .text-dark
+        {
+            transition: all 300ms ease-in-out;
+        }
 
         .bcardStyle
         {
@@ -216,7 +308,7 @@
         .textarea .titlePage
         {
             margin: 0 auto;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             text-align: center;
             font-size: 30px;
             border-style: groove;

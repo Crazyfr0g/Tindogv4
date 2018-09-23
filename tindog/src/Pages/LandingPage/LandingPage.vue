@@ -67,7 +67,7 @@
         </div>
 
 
-        <b-modal ref="myModalRefSignin" hide-footer title="Sign-In">
+        <b-modal ref="myModalRefSignin" hide-footer title="Sign-In" no-close-on-backdrop>
             <div class="d-block text-center">
                 <h3>Email</h3>
                 <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your email" v-model="signinEmail"></b-form-input>
@@ -79,7 +79,7 @@
         </b-modal>
 
         
-        <b-modal ref="myModalRefSignup" hide-footer title="Sign-Up">
+        <b-modal ref="myModalRefSignup" hide-footer title="Sign-Up" no-close-on-backdrop>
           <div class="d-block text-center">
 
             <h3>Firstname</h3>
@@ -138,11 +138,10 @@
                         this.$router.push('/Home')
                     })
                     .catch(function(error) {
-                    // Handle Errors here.
+          
                          var errorCode = error.code;
                          var errorMessage = error.message;
                          console.log(error)
-                    // ...
                     });
 
                     this.signinEmail = ""
@@ -163,11 +162,6 @@
                             displayName: `${signFirstname} ${signLastname}`
                         
                         })
-
-                        // firebase.auth().currentUser.email({
-
-                        //     displayEmail: `${signEmail}`
-                        // })
 
                         let uid = firebase.auth().currentUser.uid
                             firebase.database().ref(`Users/${uid}`).set({

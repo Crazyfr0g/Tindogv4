@@ -1,14 +1,10 @@
 <template>
     <div class="fixed">
         <b-navbar toggleable="md" type="dark" variant="info">
-
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-            
-                <div class="fixedIcon">
+                <!-- <div class="fixedIcon">
                     <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
-                </div>
-    
-            
+                </div> -->
                 <b-navbar-brand href="#" id="LogoStyle" variant="dark">
                   <p class="text-light font" @click="HomePage">Tindog &#128021;</p>
                 </b-navbar-brand>
@@ -27,7 +23,7 @@
                     <b-navbar-nav class="ml-auto" variant="light">
                         <!-- <div class="navStyle"> -->
                             <b-nav-item><p class="text-light" @click="HomePage">Newsfeed</p></b-nav-item>
-                            <b-nav-item><p class="text-light" @click="SellingPage">Dog Store</p></b-nav-item></router-link> 
+                            <b-nav-item><p class="text-light" @click="SellingPage">Dog Store</p></b-nav-item>
                             <b-nav-item><p class="text-light" @click="AccessoriesPage">Accessories</p></b-nav-item> 
                             <b-nav-item><p class="text-light" @click="BreedingPage">Breeding</p></b-nav-item> 
                         <!-- </div>   -->
@@ -37,7 +33,6 @@
         </b-navbar>
 
         <!-- <notification-page/> -->
-        
     </div>
 </template>
 
@@ -50,16 +45,19 @@
         data()
         {
             return{
-                displayName: "",
-                displayEmail: ""
+                displayName: '',
+                displayEmail: ''
             }    
         },
 
         created()
         {
             let displayName = firebase.auth().currentUser.displayName
-
-            this.displayName = displayName
+            if(displayName)
+            {
+                this.displayName = displayName
+            }
+           
         
         },
 
@@ -89,7 +87,7 @@
 
             BreedingPage()
             {
-                this.$router.push('/Sample')
+                this.$router.push('/Breeding')
             },
 
             NotificationPage()
@@ -127,7 +125,7 @@
         z-index: 99;
     }
 
-    .fixedIcon i:hover
+    /* .fixedIcon i:hover
     {
     transform: translate(0px, -2px);
     }
@@ -144,5 +142,5 @@
     bottom: 20px;
     z-index: 99;
 
-    }
+    } */
 </style>

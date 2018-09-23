@@ -1,59 +1,62 @@
 <template>
-        <div id="Style">
+        <div id="Style" class="paddingTop">
             <navbar/>
-            <b-navbar toggleable="md" type="dark" variant="dark">
-    
-                <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
-                
-                    <b-navbar-brand href="#" id="LogoStyle" variant="dark">
-                      <p class="text-light font">Tindog &#128021;</p>
-                    </b-navbar-brand>
-    
-                <b-collapse is-nav id="nav_collapse" type="dark">
-    
-                        <!-- <b-dropdown id="ddown-divider" text="Lix" class="m-2">
-                                <b-dropdown-item-button>Profile</b-dropdown-item-button>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item-button variant="primary">Notifications<b-badge>4</b-badge></b-dropdown-item-button>
-                                <b-dropdown-divider></b-dropdown-divider>
-                                <b-dropdown-item-button>Log-out</b-dropdown-item-button> -->
-                               
-            
-                                <!-- <div class="text-center">
-                                    <b-button variant="primary">
-                                      Notifications <b-badge variant="light">4</b-badge>
-                                    </b-button>
-                                </div> -->
-                        </b-dropdown>
-                        
-                        <b-navbar-nav class="ml-auto" variant="light">
-                                <b-nav-item><p class="text-light">Newsfeed</p></b-nav-item>
-                                <b-nav-item><p class="text-light">Selling/Buying</p></b-nav-item>
-                                <b-nav-item><p class="text-light">Breeding</p></b-nav-item> 
-                        </b-navbar-nav>
-                        
-                </b-collapse>
-            </b-navbar>
-    
             <div class="textarea">
                 <p class="titlePage">Profile</p>
             </div>
+            <div class="ImageStyle">  
+                <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
+                <p class="profile">{{ displayName }} &#x1F58B;</p>
+                <p class="profile">{{ displayEmail }}</p>
+                <p class="profile">Location: Zamboang(Tetuan)</p>   
+            </div><br>
+
+
+            <b-card class="bcardWidth">
+                <div class="editIcon">
+                    <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
+                </div>
+                
+                <p class="messageCenter"><i>Messages</i></p>
+                    <hr width="250"/>
+                <div v-for="(feed, i) in feeds" :key="feed.key" class="editIconArea">
+                    <ul class="list-unstyled">
+
+                        <b-media tag="li"class="my-4">
+                            <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
+                                <h5 class="mt-0 mb-1"> {{ feed.sender }}</h5>
+                                <p> {{ feed.message }} </p>
+                        </b-media>
+                    </ul>  
+                    <b-button class="d-inline" variant="outline-success" @click="sendReply(feed.senderuid)">Reply</b-button>
+
+                </div>
+            </b-card>
     
-            <!-- <div class="clearfixMargin"> -->
+            <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
+                <p>Seller ID: </p>
+                <div class="d-block text-center">
+                    <b-form-textarea id=""
+                        v-model="messageContent"
+                        placeholder="Enter something"
+                        :rows="3"
+                        :max-rows="6"
+                        class="textareaDesign">
+                    </b-form-textarea>
     
-                <div class="ImageStyle">  
-                    <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
-                    <p class="profile">{{ displayName }} &#x1F58B;</p>
-                    <p class="profile">{{ displayEmail }}</p>
-                    <p class="profile">Location: Zamboang(Tetuan)</p>   
-                </div><br>
-    
-                <b-card class="bcardWidth">
+                    <div class="textarea-button">
+                        <b-button class="d-inline" variant="outline-success" @click="sendMessage">Send</b-button>
+                        <b-button class="d-inline" variant="outline-danger" @click="cancelMessage">Cancel</b-button>
+                    </div>
+                </div>
+            </b-modal>
+
+            <b-card class="bcardWidth">
                     <div class="editIcon">
-                        <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
+                        <i class="fa fa-cog fa-3x" aria-hidden="true"></i> 
                     </div>
 
-                    <p class="messageCenter"><i>Messages</i></p>
+                    <p class="messageCenter"><i>Previous Feed</i></p>
                         <hr width="250"/>
                     <div class="editIconArea">
                         <ul class="list-unstyled">
@@ -67,38 +70,20 @@
                                     lacinia congue felis in faucibus.
                             </b-media>
 
-                            <b-media tag="li" class="my-4">
-                                <b-img slot="aside" blank blank-color="#cba" width="64" alt="placeholder" />
-                                    <h5 class="mt-0 mb-1">List-based media object</h5>
-                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                    ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                    viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                    lacinia congue felis in faucibus.
-                            </b-media>
-
-                            <b-media tag="li" class="my-4">
-                                <b-img slot="aside" blank blank-color="#bac" width="64" alt="placeholder" />
-                                    <h5 class="mt-0 mb-1">List-based media object</h5>
-                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                    ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                    viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                    lacinia congue felis in faucibus.
-                            </b-media>
                         </ul>          
-                            <b-pagination-nav align="center" :link-gen="linkGen" :number-of-pages="10" v-model="currentPage"/>
+                            <b-pagination-nav align="center"  :number-of-pages="10" v-model="currentPage"/>
                     </div>
                 </b-card>
 
                 <b-card class="bcardWidth">
                         <div class="editIcon">
-                            <i class="fa fa-cog fa-3x" aria-hidden="true"></i> 
+                            <i class="fa fa-usd fa-3x" aria-hidden="true"></i>
                         </div>
     
                         <p class="messageCenter"><i>Messages</i></p>
                             <hr width="250"/>
                         <div class="editIconArea">
                             <ul class="list-unstyled">
-    
                                 <b-media tag="li"class="my-4">
                                     <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
                                         <h5 class="mt-0 mb-1">List-based media object</h5>
@@ -106,71 +91,12 @@
                                         ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
                                         viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
                                         lacinia congue felis in faucibus.
-                                </b-media>
-    
-                                <b-media tag="li" class="my-4">
-                                    <b-img slot="aside" blank blank-color="#cba" width="64" alt="placeholder" />
-                                        <h5 class="mt-0 mb-1">List-based media object</h5>
-                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                        ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                        viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                        lacinia congue felis in faucibus.
-                                </b-media>
-    
-                                <b-media tag="li" class="my-4">
-                                    <b-img slot="aside" blank blank-color="#bac" width="64" alt="placeholder" />
-                                        <h5 class="mt-0 mb-1">List-based media object</h5>
-                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                        ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                        viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                        lacinia congue felis in faucibus.
-                                </b-media>
+                                </b-media>                       
                             </ul>          
-                                <b-pagination-nav align="center" :link-gen="linkGen" :number-of-pages="10" v-model="currentPage"/>
+                            <b-pagination-nav align="center"  :number-of-pages="10" v-model="currentPage"/>
                         </div>
-                    </b-card>
-
-                    <b-card class="bcardWidth">
-                            <div class="editIcon">
-                                <i class="fa fa-usd fa-3x" aria-hidden="true"></i>
-                            </div>
-        
-                            <p class="messageCenter"><i>Messages</i></p>
-                                <hr width="250"/>
-                            <div class="editIconArea">
-                                <ul class="list-unstyled">
-        
-                                    <b-media tag="li"class="my-4">
-                                        <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
-                                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                            ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                            viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                            lacinia congue felis in faucibus.
-                                    </b-media>
-        
-                                    <b-media tag="li" class="my-4">
-                                        <b-img slot="aside" blank blank-color="#cba" width="64" alt="placeholder" />
-                                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                            ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                            viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                            lacinia congue felis in faucibus.
-                                    </b-media>
-        
-                                    <b-media tag="li" class="my-4">
-                                        <b-img slot="aside" blank blank-color="#bac" width="64" alt="placeholder" />
-                                            <h5 class="mt-0 mb-1">List-based media object</h5>
-                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                            ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                            viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                            lacinia congue felis in faucibus.
-                                    </b-media>
-                                </ul>          
-                                    <b-pagination-nav align="center" :link-gen="linkGen" :number-of-pages="10" v-model="currentPage"/>
-                            </div>
-                        </b-card>
-               
+                </b-card>
+            
         </div>
     </template>
     
@@ -178,30 +104,78 @@
         
         import firebase from 'firebase'
         import Navbar from '../../components/NavBar.vue'
-            export default {
+            export default 
+            {
+
+                components:
+                {
+                    Navbar
+                },
+
+                data()
+                {
+                    return{
+                        feeds: [],
+                        displayEmail: '',
+                        displayName: '',
+                        currentPage: null,
+                        messageContent:'',
+                        
+                    }
+                },
 
                 created()
                 {
-                    let displayName = firebase.auth().currentUser.displayName
-                    let displayEmail = firebase.auth().currentUser.email
+                    this.displayName = firebase.auth().currentUser.displayName
+                    this.displayEmail= firebase.auth().currentUser.email
+                    this.uid = firebase.auth().currentUser.uid
+                    this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+            
+                        firebase.database().ref(`Users/${this.uid}/Messages`).on('value',snap => {
 
-                    this.displayName = displayName
-                    this.displayEmail = displayEmail
-
-                    console.log(displayEmail)
+                        let feedArray = []
+                        snap.forEach(childSnap => {
+                            let valSender = childSnap.val().Sender
+                            let valMessage = childSnap.val().Message
+                            let valDateandTime = childSnap.val().DateandTime        
+                            let valSenderuid = childSnap.val().Senderuid
+                            feedArray.push({ 
+                                date: valDateandTime,
+                                sender: valSender,
+                                message: valMessage,
+                                senderuid: valSenderuid
+                            }) 
+                        })
+                            this.feeds = feedArray 
+                    })
                 },
 
-              data () 
-              {
-                return {
-                  text: ''
+                methods:
+                {
+                    sendReply(senderuid)
+                    {
+                        console.log(senderuid)
+                        this.recieve = senderuid
+                        this.$refs.messageSend.show() 
+                    },
+
+                    sendMessage()
+                    {
+                        let valmessage = this.messageContent  
+                        this.senderuid = firebase.auth().currentUser.uid
+
+                        firebase.database().ref(`Users/${this.recieve}/Messages`).push({
+                            Sender: this.displayName,
+                            Message: valmessage,
+                            DateandTime: this.date,
+                            Senderuid: this.senderuid
+                            }).then(post => {
+                                this.$refs.messageSend.hide()
+                                this.messageContent = ''
+                        })                    
+                    },
                 }
-              },
     
-              components:{
-            
-                Navbar
-             }
             }
     </script>
     

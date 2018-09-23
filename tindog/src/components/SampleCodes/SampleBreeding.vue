@@ -32,8 +32,6 @@
                         class="textareaDesign">
                     </b-form-textarea>
 
-                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
-
                     <div class="textarea-button">
                         <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
                         <b-button class="d-inline" variant="outline-danger" @click="cancelPost">Cancel</b-button>
@@ -47,8 +45,8 @@
                     <div class="bcardContent1"> 
                         <b-media> 
                             <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
-                            <h5 class="mt-0"> {{ feed.nameofowner }}</h5>
-                            <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyles"/>
+                            <h5 class="mt-0"> {{ feed.ownname }}</h5>
+                            <b-img center src="https://picsum.photos/300/150/?image=41" fluid alt="Fluid image" class="imageStyles"/>
                         </b-media> 
 
                         
@@ -59,15 +57,14 @@
                     </div>
              
                     <div class="bcardContent2">  
-                        <p>Name of dog: {{ feed.nameofdog }}</p>
-                        <p>Breed of dog: {{ feed.breedofdog }}</p>
-                        <p>Age of dog: {{ feed.ageofdog }}</p>
-                        <p>Sex: {{ feed.sexofdog }} </p>
-                        <p>Information: {{ feed.infoofdog }}</p>
-                        <p>Time & Date: {{ feed.date }}</p>
+                        <p>Name of dog: {{ feed.dogname }}</p>
+                        <p>Breed of dog: {{ feed.dogbreed }}</p>
+                        <p>Age of dog: {{ feed.dogage }}</p>
+                        <p>Sex: {{ feed.dogsex }} </p>
+                        <p>information: {{ feed.doginfo }}</p>
 
                         <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message owner</b-button>
+                            <b-button class="messageOwner" @click="clickMessage">Message owner</b-button>
                         </div>    
                     </div>      
         
@@ -77,7 +74,7 @@
             <b-modal ref="messageSend" hide-footer title="Message Owner" no-close-on-backdrop>
                     <div class="d-block text-center">
                         <b-form-textarea id=""
-                            v-model="messageContent"
+                            v-model="text"
                             placeholder="Enter something"
                             :rows="3"
                             :max-rows="6"
@@ -107,53 +104,45 @@
               data () 
               {
                 return {
-                    // abouttheDog: '',
+                    abouttheDog: '',
                     file: null,
                     feeds: [],
-                    nameofDog: '',
-                    breedofDog: '',
-                    ageofDog: '',
-                    sexofDog: '',
-                    abouttheDog:'',
-                    image: null,
-                    messageContent:'',
+
                 }
-                console.log(dropdownValue)
+                // console.log(dropdownValue)
               },
     
               created()
               {
-                this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
-                this.displayName  = firebase.auth().currentUser.displayName
+                    let displayName = firebase.auth().currentUser.displayName
+                    this.displayName = displayName
 
-                this.liveAddingPost()
 
+                  firebase.database().ref('AvailforBreeding').on('value',snap => {
+                    let feedArray = []
+                      snap.forEach(childSnap => {
+                        let valAgeofDog = childSnap.val().AgeofDog
+                        let valBreedofDog = childSnap.val().BreedofDog
+                        let valInfoofDog = childSnap.val().InformationofDog
+                        let valNameofDog = childSnap.val().NameofDog
+                        let valNameofOwner = childSnap.val().NameofOwner 
+                        let valSexofDog = childSnap.val().SexofDog
+                        feedArray.push({ 
+                            dogage: valAgeofDog,
+                            dogbreed: valBreedofDog,
+                            doginfo: valInfoofDog,
+                            dogname: valNameofDog,
+                            ownname: valNameofOwner,
+                            dogsex: valSexofDog
+                         })
+                      })
+                        this.feeds = feedArray
+                        console.log(feeds)
+                  })
               },
     
              methods:{
 
-                clickMessage(uid)
-                    {
-                        this.uid = uid
-                        console.log(uid)
-                        this.$refs.messageSend.show()
-                    },
-
-                sendMessage()
-                    {
-                        let valmessage = this.messageContent  
-                        this.senderuid = firebase.auth().currentUser.uid
-
-                        firebase.database().ref(`Users/${this.uid}/Messages`).push({
-                                    Sender: this.displayName,
-                                    Message: valmessage,
-                                    DateandTime: this.date,
-                                    Senderuid: this.senderuid
-                                }).then(post => {
-                                    this.$refs.messageSend.hide()
-                                    this.messageContent = ''
-                                })                    
-                    },
                 addfeed()
                     {
                         this.$refs.addNewfeeds.show()
@@ -168,82 +157,36 @@
                         let dogAge = this.ageofDog
                         let dogSex = this.sexofDog
                         let dogInformation = this.abouttheDog
-                        let imageUpload = this.image
                         let uid = firebase.auth().currentUser.uid
-                        let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
                         
-                        let newPostkey = firebase.database().ref(`Users/${uid}/AvaibleforBreedingPost`).push({
-                                Dogowner: dogOwner,
-                                Nameofdog: dogName,
-                                Breedofdog: dogBreed,
-                                Ageofdog: dogAge,
-                                Sexofdog: dogSex,
-                                Doginformation:dogInformation,
-                                uid,
-                                date
-                        }).then(data => {
-                            let key = data.key
-                            firebase.storage().ref(`Images/Breedingpost/${key}`).put(imageUpload)
-                            firebase.database().ref(`AvailableforBreeding/${key}`).set({ 
-                                Dogowner: dogOwner,
-                                Nameofdog: dogName,
-                                Breedofdog: dogBreed,
-                                Ageofdog: dogAge,
-                                Sexofdog: dogSex,
-                                Doginformation:dogInformation,
-                                uid,
-                                date
-                            }).then(post => {
-                                this.text = ''
-                                this.image = ''
-                                this.$refs.addNewfeeds.hide()
-                            })
+                        // var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
+    
+                        firebase.database().ref('AvailforBreeding').push({ 
+
+                                Uid: uid,
+                                NameofOwner: dogOwner,
+                                NameofDog: dogName,
+                                BreedofDog: dogBreed,
+                                AgeofDog: dogAge,
+                                SexofDog: dogSex,
+                                InformationofDog: dogInformation
                         })
-                    },
 
-                    liveAddingPost()
-                    {
+                        //   firebase.database().ref(`AvailforBreeding/${uid}`).set({
 
-                        firebase.database().ref('AvailableforBreeding').on('value',snap => {
-                            let feedArray = []
-                            let promiseArr = []
-                            snap.forEach(childSnap => {
-                                let valDogowner = childSnap.val().Dogowner
-                                let valContent = childSnap.val().Doginformation 
-                                let valDate = childSnap.val().date                     
-                                let valNameofDog = childSnap.val().Nameofdog
-                                let valBreedofDog = childSnap.val().Breedofdog
-                                let valAgeofDog = childSnap.val().Ageofdog
-                                let valSexofDog = childSnap.val().Sexofdog
-                                let valId = childSnap.val().uid
+                        //         Uid: uid,
+                        //         NameofOwnwer: dogOwner,
+                        //         NameofDog: dogName,
+                        //         BreedofDog: dogBreed,
+                        //         AgeofDog: dogAge,
+                        //         SexofDog: dogSex,
+                        //         InformationofDog: dogInformation
+                        // })
 
-                                    let promise = firebase.storage().ref(`Images/Breedingpost/${childSnap.key}`).getDownloadURL().then(url => {
-                                    return { 
-                                        key: childSnap.key,
-                                        infoofdog: valContent,
-                                        image: url,
-                                        date: valDate,
-                                        nameofowner: valDogowner,
-                                        nameofdog: valNameofDog,
-                                        breedofdog: valBreedofDog,
-                                        ageofdog: valAgeofDog,
-                                        sexofdog: valSexofDog,
-                                        uid: valId
-                                    }
-                                })
-                                promiseArr.push(promise)
-                            })
-
-                            Promise.all(promiseArr).then(values => {
-                                values.sort(function(a, b) {
-                                    var dateA = new Date(a.date);
-                                    var dateB = new Date(b.date);
-                                    return dateA - dateB;
-                                }).reverse()
-                                this.feeds = values
-                            })
-                         
-                        }) 
+                        .then(post => {
+                            this.text = ''
+                            this.$refs.addNewfeeds.hide()
+                        })
                     },
 
                 cancelPost()
@@ -251,9 +194,22 @@
                         this.$refs.addNewfeeds.hide()
                     },
 
+                clickMessage()
+                    {
+                        this.$refs.messageSend.show()
+                    },
+
                 cancelMessage()
                     {
                         this.$refs.messageSend.hide()
+                    },
+
+                getFileName() 
+                    {
+                        let file = document.getElementById('file')
+                    //To display the file name
+                        this.fileName = file.files[0].name
+                        console.log(file)
                     },
             }
             
@@ -292,7 +248,6 @@
         {
             width: 50%;
             padding-left: 50px; 
-            margin-top: 50px;
         }
 
 

@@ -8,7 +8,7 @@ import NotificationPage from '@/Pages/NotificationPage/NotificationPage'
 import BreedingPage from '@/Pages/BreedingPage/BreedingPage'
 import AccessoriesPage from '@/Pages/AccessoriesPage/AccessoriesPage'
 
-import Sample from '@/Pages/Sample/Sample'
+// import Sample from '@/Pages/Sample/Sample'
 import SampleProf from '@/Pages/Sample/SampleProfile'
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -34,7 +34,7 @@ export default new Router({
       path: '/Selling',
       name: 'SellingPage',
       component: SellingPage
-    },
+      },
 
     {
       path: '/Profile',
@@ -65,12 +65,6 @@ export default new Router({
       name: 'AccessoriesPage',
       component: AccessoriesPage
     },
-
-    {
-      path: '/Sample',
-      name: 'Sample',
-      component: Sample
-    }
 
   ]
 })

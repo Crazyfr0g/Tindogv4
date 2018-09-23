@@ -5,21 +5,37 @@
                 <p class="titlePage">Dogs</p>
             </div> 
 
-            <!-- <div class="fixedIcon">
+            <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
-            </div> -->
+            </div>
 
-            <b-modal ref="addNewfeeds" hide-footer title="Post News">
+            <b-modal ref="addNewfeeds" hide-footer title="Post News" no-close-on-backdrop>
                 <div class="d-block text-center">
+                
+                    <h3>Name of dog</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
+        
+                    <h3>Breed of dog</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter breed of dog" v-model="breedofDog"></b-form-input>
+
+                    <h3>Age of dog</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
+
+                    <h3>Sex</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
+
+                    <h3>Price</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="priceofDog"></b-form-input>
+
                     <b-form-textarea id=""
-                        v-model="text"
+                        v-model="abouttheDog"
                         placeholder="Enter something"
                         :rows="3"
                         :max-rows="6"
                         class="textareaDesign">
                     </b-form-textarea>
     
-                    <b-form-file v-model="file" :state="Boolean(file)" placeholder="Upload a photo.." @change="getFileName"></b-form-file>
+                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
     
                     <div class="textarea-button">
                         <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
@@ -28,42 +44,45 @@
                 </div>
             </b-modal>
 
-            <b-card v-for='(feed, i) in feeds' :key="i" class="bcardStyle"> 
+            <b-card v-for="(feed, i) in feeds" :key="feed.key" class="bcardStyle"> 
                 <div class="clearfixMargin">
 
                     <div class="bcardContent1"> 
                         <b-media> 
                             <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
-                            <h5 class="mt-0"> {{ feed.name }}</h5>
-                            <b-img center src="https://picsum.photos/300/150/?image=41" fluid alt="Fluid image" class="imageStyles"/>
+                            <h5 class="mt-0"> {{ feed.nameofowner }}</h5>
+                            <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyles"/>
                         </b-media> 
 
                         
                         <div class="media-button">
-                            <!-- <b-button class="d-inline" variant="outline-success">Like</b-button>
-                            <b-button class="d-inline" variant="outline-danger">Dislike</b-button> -->
-                            <p>Price:</p>
+                            <p>Price: {{ feed.priceofdog }}</p>
                         </div>
+                        
                     </div>
              
                     <div class="bcardContent2">  
-                        <p>Name of dog: Andie </p>
-                        <p>Breed of dog: Beagle</p>
-                        <p>Age of dog: 1 year 4 months</p>
-                        <p>Sex: Female </p>
+                        <p>Name of dog: {{ feed.nameofdog }} </p>
+                        <p>Breed of dog: {{ feed.breedofdog }}</p>
+                        <p>Age of dog: {{ feed.ageofdog }}</p>
+                        <p>Sex: {{ feed.sexofdog }} </p>
+                        <p>Information: {{ feed.content }} </p>
+                        <p>Time & Date: {{ feed.date }} </p>
+                        <p>uid: {{ feed.uid }} </p>
 
                         <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage">Message owner</b-button>
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
                         </div>    
                     </div>      
         
                 </div>
             </b-card>   
 
-            <b-modal ref="messageSend" hide-footer title="Message Owner">
+            <!-- This is the modal of message seller section for dogs -->
+            <b-modal ref="messageSend" hide-footer title="Message Owner" no-close-on-backdrop>
                     <div class="d-block text-center">
                         <b-form-textarea id=""
-                            v-model="text"
+                            v-model="messageContent"
                             placeholder="Enter something"
                             :rows="3"
                             :max-rows="6"
@@ -76,110 +95,207 @@
                         </div>
                     </div>
             </b-modal>
+            <!-- End of modal message seller for dogs -->
                   
     
         </div>
     </template>
     
-    <script>
-        import firebase from 'firebase'
-        import Navbar from '../../components/NavBar.vue'
-    
-            export default {
-            components:{
-                Navbar
-            },
-    
-              data () 
-              {
-                return {
-                  text: '',
-                  file: null,
-                  feeds: []
-                }
-              },
-    
-              created(){
-                  firebase.database().ref('Feeds').on('value',snap => {
-                    let feedArray = []
-                      snap.forEach(childSnap => {
-                        let valName = childSnap.val().name
-                        let valContent = childSnap.val().content
-                        feedArray.push({ 
-                            name: valName,
-                            content: valContent
-                         })
-                      })
-                        this.feeds = feedArray
-                  })
-              },
-    
-             methods:{
+<script>
+import firebase from 'firebase'
+import Navbar from '../../components/NavBar.vue'
 
-                addfeed()
-                    {
-                        this.$refs.addNewfeeds.show()
-                    },
+    export default 
+    {
 
-                postFeed()
-                    {
-                        let contentPicture = this.file
-                        let messageFeed = this.text
-                        let name = 'Cassidy'
-                        console.log(this.file)
-    
-                        var storageRef = firebase.storage().ref('images/samlple.jpg').put(this.file)
-    
-                        firebase.database().ref('Feeds').push({ 
-                            
-                           content: messageFeed,
-                           name
-                        })
-                        .then(post => {
-                            this.text = ''
-                            this.$refs.addNewfeeds.hide()
-                        })
-                    },
+        components:
+        {
+            Navbar
+        },
 
-                cancelPost()
-                    {
-                        this.$refs.addNewfeeds.hide()
-                    },
-
-                clickMessage()
-                    {
-                        this.$refs.messageSend.show()
-                    },
-
-                cancelMessage()
-                    {
-                        this.$refs.messageSend.hide()
-                    },
-
-                getFileName() 
-                    {
-                        let file = document.getElementById('file')
-                    //To display the file name
-                        this.fileName = file.files[0].name
-                        console.log(file)
-                    },
+        data () 
+        {
+        return {
+            file: null,
+            image: null,
+            feeds: [],
+            abouttheDog:'',
+            nameofDog:'',
+            breedofDog:'',
+            ageofDog:'',
+            sexofDog:'',
+            priceofDog:'',
+            text:'',
+            text:'',
+            displayName:'',
+            messageContent: ''
             }
-            
+        },
+
+        created()
+        {
+            this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+            this.displayName  = firebase.auth().currentUser.displayName
+            this.liveAddingPost()
+        },
+
+        methods:
+        {
+            clickMessage(uid)
+            {
+                this.uid = uid
+                console.log(uid)
+                this.$refs.messageSend.show()
+            },
+
+            sendMessage()
+            {
+                let valmessage = this.messageContent  
+                this.senderuid = firebase.auth().currentUser.uid
+
+                firebase.database().ref(`Users/${this.uid}/Messages`).push({
+                            Sender: this.displayName,
+                            Message: valmessage,
+                            DateandTime: this.date,
+                            Senderuid: this.senderuid
+                        }).then(post => {
+                            this.$refs.messageSend.hide()
+                            this.messageContent = ''
+                        })                    
+            },
+
+            addfeed()
+                {
+                    this.$refs.addNewfeeds.show()
+                },
+
+            postFeed()
+                {           
+                    let name = this.displayName
+                    let dogOwner = this.displayName
+                    let dogName = this.nameofDog
+                    let dogBreed = this.breedofDog
+                    let dogAge = this.ageofDog
+                    let dogSex = this.sexofDog
+                    let dogInformation = this.abouttheDog
+                    let dogPrice = this.priceofDog
+                    let uid = firebase.auth().currentUser.uid
+                    let imageUpload = this.image
+                    let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+                    
+                    let newPostkey = firebase.database().ref(`Users/${uid}/NewsDogPost`).push({
+                                Dogowner: dogOwner,
+                                Nameofdog: dogName,
+                                Breedofdog: dogBreed,
+                                Ageofdog: dogAge,
+                                Sexofdog: dogSex,
+                                Doginformation:dogInformation,
+                                Priceofdog: dogPrice,
+                                date,
+                                uid
+                        }).then(data => {
+                            let key = data.key
+                            firebase.storage().ref(`Images/Sellingfeed/${key}`).put(imageUpload)
+                            firebase.database().ref(`DogsforSale/${key}`).set({ 
+                                Dogowner: dogOwner,
+                                Nameofdog: dogName,
+                                Breedofdog: dogBreed,
+                                Ageofdog: dogAge,
+                                Sexofdog: dogSex,
+                                Doginformation:dogInformation,
+                                Priceofdog: dogPrice,
+                                date,
+                                uid
+                            }).then(post => {
+                                this.text = ''
+                                this.image = ''
+                                this.$refs.addNewfeeds.hide()
+                            })
+                        })
+
+                    .then(post => {
+                        this.text = ''
+                        this.$refs.addNewfeeds.hide()
+                    })
+                },
+
+
+
+            liveAddingPost()
+            {
+                firebase.database().ref('DogsforSale').on('value',snap => {
+                    let feedArray = []
+                    let promiseArr = []
+
+                        snap.forEach(childSnap => {
+                            let valContent = childSnap.val().Doginformation
+                            let valDate = childSnap.val().date
+                            let valNameofOwner = childSnap.val().Dogowner
+                            let valNameofDog = childSnap.val().Nameofdog
+                            let valBreedofDog = childSnap.val().Breedofdog
+                            let valAgeofDog = childSnap.val().Ageofdog
+                            let valSexofDog = childSnap.val().Sexofdog
+                            let valPriceofDog = childSnap.val().Priceofdog
+                            let valId = childSnap.val().uid
+
+                            let promise = firebase.storage().ref(`Images/Sellingfeed/${childSnap.key}`).getDownloadURL().then(url => {
+                                return { 
+                                    key: childSnap.key,
+                                    content: valContent,
+                                    image: url,
+                                    date: valDate,
+                                    nameofowner: valNameofOwner,
+                                    nameofdog: valNameofDog,
+                                    breedofdog: valBreedofDog,
+                                    ageofdog: valAgeofDog,
+                                    sexofdog: valSexofDog,
+                                    priceofdog: valPriceofDog,
+                                    uid: valId
+                                }
+                            })
+                            promiseArr.push(promise)
+                        })
+
+                        Promise.all(promiseArr).then(values => {
+                            values.sort(function(a, b) {
+                                var dateA = new Date(a.date);
+                                var dateB = new Date(b.date);
+                                return dateA - dateB;
+                            }).reverse()
+                            this.feeds = values
+                    })
+                    
+                }) 
+            },
+
+            cancelPost()
+                {
+                    this.$refs.addNewfeeds.hide()
+                },
+
+            cancelMessage()
+                {
+                    this.$refs.messageSend.hide()
+                },
         }
-    </script>
+        
+}
+</script>
     
     <style>
 
         .media-button
         {
 
-            margin-top: 10px;
+            margin-top: 90px;
+            font-weight: bold;
            
         }
 
         .media-button p
         {
             margin-bottom: 0px;
+            color: black;
         }
 
         .bcardStyle
@@ -204,6 +320,8 @@
         .bcardContent1 .imageStyles
         {
             padding-left:50px; 
+            height: 200px;
+            width: 400px;
         }
 
 
@@ -211,6 +329,7 @@
         {
             width: 50%;
             padding-left: 50px; 
+           
         }
 
 
@@ -254,45 +373,28 @@
         .fixedIcon
         {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            right: 20px;
+            bottom: 20px;
             z-index: 99;
-            margin-top: 45%;
-            margin-right: 30px;
-            text-align: right;
         }
     
-        .textarea
+        /* .textarea
         {
             width: 75%;
             margin: 0 auto;
             margin-top: 40px;
             margin-bottom: 30px;
-        }
-    
-        /* .bmediaStyle
-        {
-            width: 75%;
-            margin: 0 auto;
-            margin-bottom: 20px;
-            display: flex;
-        }
-
-        .bcardstyle .bmediaStyle
-        {
-            margin-bottom: 20px;
         } */
     
-        .textareaDesign
+        /* .textareaDesign
         {
             margin-bottom: 10px;
-        }
+        } */
 
-        .textarea-button
+        /* .textarea-button
         {
             margin-top: 15px;
-        }
+        } */
     
     </style>
     

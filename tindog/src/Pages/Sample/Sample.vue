@@ -307,13 +307,9 @@
         .fixedIcon
         {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 99;
-            margin-top: 45%;
-            margin-right: 30px;
-            text-align: right;
+        right: 20px;
+        bottom: 20px;
+        z-index: 99;
         }
     
         .textarea
