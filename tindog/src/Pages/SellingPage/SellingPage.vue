@@ -68,7 +68,7 @@
                         <p>Sex: {{ feed.sexofdog }} </p>
                         <p>Information: {{ feed.content }} </p>
                         <p>Time & Date: {{ feed.date }} </p>
-                        <p>uid: {{ feed.uid }} </p>
+                        <!-- <p>uid: {{ feed.uid }} </p> -->
 
                         <div class="messageStyle">
                             <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
@@ -212,11 +212,6 @@ import Navbar from '../../components/NavBar.vue'
                                 this.$refs.addNewfeeds.hide()
                             })
                         })
-
-                    .then(post => {
-                        this.text = ''
-                        this.$refs.addNewfeeds.hide()
-                    })
                 },
 
 
@@ -287,7 +282,7 @@ import Navbar from '../../components/NavBar.vue'
         .media-button
         {
 
-            margin-top: 90px;
+            margin-top: 60px;
             font-weight: bold;
            
         }
@@ -337,6 +332,7 @@ import Navbar from '../../components/NavBar.vue'
         {
             width: 480px;
             margin: 0 auto;
+            background: linear-gradient(to right, #2b5876);
         }
 
         .bcardContent2 p

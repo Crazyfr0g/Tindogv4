@@ -1,6 +1,7 @@
 <template>
     <div class="fixed">
-        <b-navbar toggleable="md" type="dark" variant="info">
+            <!-- type="dark" variant="info" -->
+        <b-navbar toggleable="md">
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
                 <!-- <div class="fixedIcon">
                     <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
@@ -15,8 +16,7 @@
 
                             <b-dropdown-item-button @click="ProfilePage">Profile</b-dropdown-item-button>
                             <b-dropdown-divider></b-dropdown-divider>
-                            <!-- <b-dropdown-item-button @click="NotificationPage">Notifications<b-badge>4</b-badge></b-dropdown-item-button> -->
-                            <b-dropdown-item-button>Log-out</b-dropdown-item-button>
+                            <b-dropdown-item-button @click="logout">Log-out</b-dropdown-item-button>
                     </b-dropdown>
 
                     
@@ -46,26 +46,18 @@
         {
             return{
                 displayName: '',
-                displayEmail: ''
+                displayEmail: '',
             }    
         },
 
         created()
         {
             let displayName = firebase.auth().currentUser.displayName
-            if(displayName)
-            {
-                this.displayName = displayName
-            }
+            this.displayName = displayName
            
         
         },
 
-        // created()
-        // {
-        //     let displayEmail = firebase.auth().currentUser.displayEmail
-        //     this.displayEmail = displayEmail
-        // },
 
         methods:
           {
@@ -100,6 +92,14 @@
                 this.$router.push('/Accessories')
             },
 
+            logout()
+            {
+                firebase.auth().signOut().then( () => {
+                    this.$router.push('/')
+                })
+               
+            }
+
 
             
           }
@@ -118,6 +118,10 @@
     }
     .fixed
     {
+        /* background: linear-gradient(to right, #0cebeb, #a8c0ff); */
+        /* background: linear-gradient(to right, #C4E0E5, #4CA1AF); */
+        /* background: linear-gradient(to right, #2b5876, #314755); */
+        background: linear-gradient(to right, #182848, #2b5876);
         position: fixed;
         top: 0;
         left: 0;

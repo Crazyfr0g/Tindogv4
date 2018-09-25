@@ -8,33 +8,34 @@
                 <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
                 <p class="profile">{{ displayName }} &#x1F58B;</p>
                 <p class="profile">{{ displayEmail }}</p>
-                <p class="profile">Location: Zamboang(Tetuan)</p>   
             </div><br>
 
 
-            <b-card class="bcardWidth">
+            <b-card class="bcardWidth" fluid v-b-scrollspy:scroll  style="position:relative; height:500px; overflow-y:scroll;">
                 <div class="editIcon">
                     <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
                 </div>
                 
-                <p class="messageCenter"><i>Messages</i></p>
+                <div id="scroll">
+                    <p class="messageCenter"><i>Messages</i></p>
                     <hr width="250"/>
-                <div v-for="(feed, i) in feeds" :key="feed.key" class="editIconArea">
-                    <ul class="list-unstyled">
-
-                        <b-media tag="li"class="my-4">
-                            <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
-                                <h5 class="mt-0 mb-1"> {{ feed.sender }}</h5>
-                                <p> {{ feed.message }} </p>
-                        </b-media>
-                    </ul>  
-                    <b-button class="d-inline" variant="outline-success" @click="sendReply(feed.senderuid)">Reply</b-button>
-
+                    <div v-for="(feed, i) in feeds" :key="feed.key" class="editIconArea">
+                        <ul class="list-unstyled">
+                            <b-media tag="li"class="my-6">
+                                <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
+                                    <h5 class="mt-0 mb-1"> {{ feed.sender }}</h5>
+                                    <p> {{ feed.message }} </p>
+                            </b-media>
+                        </ul>  
+                        <b-button class="d-inline" variant="outline-success" @click="sendReply(feed.senderuid)">Reply</b-button>
+                        <b-button class="d-inline" variant="outline-danger" @click="deleteReply(feed.senderuid)">Delete</b-button>
+                        <hr width="600"/>
+                    </div>
                 </div>
             </b-card>
+
     
             <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
-                <p>Seller ID: </p>
                 <div class="d-block text-center">
                     <b-form-textarea id=""
                         v-model="messageContent"
@@ -51,6 +52,19 @@
                 </div>
             </b-modal>
 
+            
+            <b-modal ref="messageDelete" title="Delete Message" no-close-on-backdrop  hide-footer>
+                <div class="d-block text-center">
+                    <b-alert show variant="danger">
+                      Are you sure to <a href="#" class="alert-link">delete</a> this message?
+                    </b-alert>
+                    <div  class="textarea-button">
+                        <b-button class="d-inline" variant="outline-success" @click="proceedDelete">Yes</b-button>
+                        <b-button class="d-inline" variant="outline-danger" @click="abortDelete">Cancel</b-button>
+                    </div>
+                </div>
+            </b-modal>
+
             <b-card class="bcardWidth">
                     <div class="editIcon">
                         <i class="fa fa-cog fa-3x" aria-hidden="true"></i> 
@@ -60,7 +74,6 @@
                         <hr width="250"/>
                     <div class="editIconArea">
                         <ul class="list-unstyled">
-
                             <b-media tag="li"class="my-4">
                                 <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
                                     <h5 class="mt-0 mb-1">List-based media object</h5>
@@ -69,11 +82,9 @@
                                     viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
                                     lacinia congue felis in faucibus.
                             </b-media>
-
-                        </ul>          
-                            <b-pagination-nav align="center"  :number-of-pages="10" v-model="currentPage"/>
+                        </ul>      
                     </div>
-                </b-card>
+            </b-card> 
 
                 <b-card class="bcardWidth">
                         <div class="editIcon">
@@ -126,29 +137,9 @@
 
                 created()
                 {
-                    this.displayName = firebase.auth().currentUser.displayName
-                    this.displayEmail= firebase.auth().currentUser.email
-                    this.uid = firebase.auth().currentUser.uid
-                    this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
-            
-                        firebase.database().ref(`Users/${this.uid}/Messages`).on('value',snap => {
-
-                        let feedArray = []
-                        snap.forEach(childSnap => {
-                            let valSender = childSnap.val().Sender
-                            let valMessage = childSnap.val().Message
-                            let valDateandTime = childSnap.val().DateandTime        
-                            let valSenderuid = childSnap.val().Senderuid
-                            feedArray.push({ 
-                                date: valDateandTime,
-                                sender: valSender,
-                                message: valMessage,
-                                senderuid: valSenderuid
-                            }) 
-                        })
-                            this.feeds = feedArray 
-                    })
+                    this.gettingMessages()
                 },
+
 
                 methods:
                 {
@@ -157,6 +148,14 @@
                         console.log(senderuid)
                         this.recieve = senderuid
                         this.$refs.messageSend.show() 
+                    },
+
+                    deleteReply(senderuid)
+                    {
+                        console.log(senderuid)
+                        this.recieve = senderuid
+                        
+                        firebase.database().ref.childSnap(`Users/${this.recieve}/Messages`).remove()           
                     },
 
                     sendMessage()
@@ -173,6 +172,34 @@
                                 this.$refs.messageSend.hide()
                                 this.messageContent = ''
                         })                    
+                    },
+
+                    gettingMessages()
+                    {
+                    
+                        this.displayName = firebase.auth().currentUser.displayName
+                        this.displayEmail= firebase.auth().currentUser.email
+                        this.uid = firebase.auth().currentUser.uid
+                        this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+                
+                            firebase.database().ref(`Users/${this.uid}/Messages`).on('value',snap => {
+
+                            let feedArray = []
+                            snap.forEach(childSnap => {
+                                let valSender = childSnap.val().Sender
+                                let valMessage = childSnap.val().Message
+                                let valDateandTime = childSnap.val().DateandTime        
+                                let valSenderuid = childSnap.val().Senderuid
+                                feedArray.push({ 
+                                    date: valDateandTime,
+                                    sender: valSender,
+                                    message: valMessage,
+                                    senderuid: valSenderuid
+                                }) 
+                            })
+                                this.feeds = feedArray 
+                        })
+
                     },
                 }
     
@@ -221,7 +248,7 @@
 
         .bcardWidth
         {
-            width: 75%; 
+            width: 60%; 
             margin: 0 auto;
             margin-bottom: 5%;
         }

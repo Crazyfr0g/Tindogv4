@@ -28,24 +28,13 @@ Vue.config.productionTip = false
       messagingSenderId: "957819378545"
     })
 
-
-    // firebase.auth().onAuthStateChanged(function(user){
-    //   if (user) {
-    //     // User is signed in.
-    //     var displayName = user.displayName;
-    //     var email = user.email;
-    //     var emailVerified = user.emailVerified;
-    //     var photoURL = user.photoURL;
-    //     var isAnonymous = user.isAnonymous;
-    //     var uid = user.uid;
-    //     var providerData = user.providerData;
-    //     // ...
-
-    //     // console.log(displayName)
-    //   } else {
-    //     // User is signed out.
-    //     // ...
-    //   }
-    // });
+    firebase.auth().onAuthStateChanged(function(user){
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
+      }
+       else {
+        localStorage.setItem('user', null)
+      }
+    });
   }
 })

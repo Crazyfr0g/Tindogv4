@@ -19,7 +19,7 @@
                         class="textareaDesign">
                     </b-form-textarea>
     
-                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
+                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.. " accept=".jpg, .png, .gif" ></b-form-file>
     
                     <div class="textarea-button">
                         <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
@@ -34,9 +34,9 @@
                         <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
                             <h5 class="mt-0">{{ feed.name }}</h5>
                         <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyle"/>   
-                            <p>{{ feed.content }}</p>  
+                            <pre class="preDesign"> {{ feed.content }} </pre>
                     </b-media>
-
+                         
                     <div class="clearFixMargin">
                         <div class="media-button">
                                 <b-button class="d-inline" variant="outline-success">Like</b-button>
@@ -48,9 +48,8 @@
                         </div>
                     </div>
                 </b-card>
+
             </div>
-                  
-    
         </div>
 </template>
     
@@ -78,49 +77,51 @@
         created()
         {
             this.liveAddingPost()
+            // setTimeout(liveAddingPost,1000)
+           
         },
 
         methods:{
 
             addfeed()
-                {
-                    this.$refs.addNewfeeds.show()
-                },
+            {
+                this.$refs.addNewfeeds.show()
+            },
 
             postFeed()
-                {
-                    let messageFeed = this.text
-                    let name = this.displayName
-                    let email = this.displayEmail
-                    let uid = firebase.auth().currentUser.uid
-                    let imageUpload = this.image
-                    let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
-                    
-                    let newPostkey = firebase.database().ref(`Users/${uid}/NewsfeedPost`).push({
-                            content: messageFeed,
-                            fullname: name,
-                            date
-                    }).then(data => {
-                        let key = data.key
-                        firebase.storage().ref(`Images/Postfeed/${key}`).put(imageUpload)
-                        firebase.database().ref(`Postfeed/${key}`).set({ 
-                            content: messageFeed,
-                            fullname: name,
-                            email: email,
-                            date
-                        }).then(post => {
-                            this.text = ''
-                            this.image = null
-                            this.$refs.addNewfeeds.hide()
-                        })
+            {
+                let messageFeed = this.text
+                let name = this.displayName
+                let email = this.displayEmail
+                let uid = firebase.auth().currentUser.uid
+                let imageUpload = this.image
+                let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+                
+                let newPostkey = firebase.database().ref(`Users/${uid}/NewsfeedPost`).push({
+                        content: messageFeed,
+                        fullname: name,
+                        date
+                }).then(data => {
+                    let key = data.key
+                    firebase.storage().ref(`Images/Postfeed/${key}`).put(imageUpload)
+                    firebase.database().ref(`Postfeed/${key}`).set({ 
+                        content: messageFeed,
+                        fullname: name,
+                        email: email,
+                        date
+                    }).then(post => {
+                        this.text = ''
+                        this.image = null
+                        this.$refs.addNewfeeds.hide()         
                     })
-                    
-                },
+                })
+                
+            },
 
             cancelPost()
-                {
-                    this.$refs.addNewfeeds.hide()
-                },
+            {
+                this.$refs.addNewfeeds.hide()
+            },
 
             liveAddingPost()
             {
@@ -137,8 +138,7 @@
                         let valName = childSnap.val().fullname
                         let valContent = childSnap.val().content
                         let valDate = childSnap.val().date
-                        // let promise = firebase.storage().ref(`Images/${childSnap.key}`).getDownloadURL().then(url => {
-                                let promise = firebase.storage().ref(`Images/Postfeed/${childSnap.key}`).getDownloadURL().then(url => {
+                        let promise = firebase.storage().ref(`Images/Postfeed/${childSnap.key}`).getDownloadURL().then(url => {
                             return { 
                                 key: childSnap.key,
                                 name: valName,
@@ -148,18 +148,17 @@
                             }
                         })
                         promiseArr.push(promise)
-                        // console.log(promise)
+                        // console.log(promiseArr)
                     })
 
                     Promise.all(promiseArr).then(values => {
                         values.sort(function(a, b) {
                             var dateA = new Date(a.date);
                             var dateB = new Date(b.date);
-                            return dateA - dateB;
+                            return dateA - dateB;                
                         }).reverse()
                         this.feeds = values
-                    })
-                    
+                    })  
                 }) 
             }
     }   
@@ -208,8 +207,15 @@
         margin: 0 auto;
         margin-top: 40px;
         margin-bottom: 30px;
-
+        
     }
+
+    .titlePage
+    {
+        /* background: linear-gradient(to right, #ffffff, #ece9e6, #ffffff); */
+        /* background-color: # */
+    }
+
 
     .bcardstyle .bmediaStyle .imageStyle
     {
@@ -230,6 +236,15 @@
     .bcardstyle .bmediaStyle
     {
         margin-bottom: 20px;
+    
+    }
+
+    .bmediaStyle
+    {
+        border-radius: 5px;
+        /* background: linear-gradient(to right, #ffffff, #ece9e6, #ffffff); */
+        /* border-color: #b6fbff; */
+        /* background-color: #fff; */
     }
 
     .textareaDesign
@@ -250,20 +265,25 @@
     
     .media-button{
         width: 50%;
-        margin-top: 0%;
+        margin-top: 0;
     }
 
     .media-button2
     {
         width: 50%;
         text-align: right;
-        margin-top: 10px;
+        margin-top: 60px;
     
     }
 
     .Time
     {
         margin-right: 20px;
+    }
+
+    .preDesign
+    {
+        font-size: 20px;
     }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div id="Style">
-        
-      <b-navbar toggleable="md" type="dark" variant="info">
+    <div id="Style" class="paddingTop">
+            <!-- type="dark" variant="info" -->
+      <b-navbar toggleable="md" class="fixed">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-navbar-brand href="#" id="LogoStyle" variant="dark"><p class="text-light font" >Tindog &#128021;</p></b-navbar-brand>
         <!-- <b-nav-form>
@@ -23,6 +23,41 @@
         </b-collapse>
       </b-navbar>
 
+      <b-carousel id="carousel1"
+        style="text-shadow: 1px 1px 2px #333;"
+        controls
+        indicators
+        :interval="3000"
+        img-width="1024"
+        img-height="380"
+        v-model="slide"
+        @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd">
+
+        <!-- Text slides with image -->
+        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=1062">
+        </b-carousel-slide>
+
+        <!-- Slides with custom text -->
+        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=837">
+        </b-carousel-slide>
+
+        <!-- Slides with image only -->
+        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=659">
+        </b-carousel-slide>
+
+        <!-- Slides with img slot -->
+        <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
+        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=237">
+        </b-carousel-slide>
+
+        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=169">
+        </b-carousel-slide>
+
+
+
+        </b-carousel>
+
         <b-card class="text-center">    
             <p class="text-dark style">
                 Welcome to Tindog the dog selling App 
@@ -38,7 +73,7 @@
 
         <div class="deckClass">
             <b-card-group deck class="mb-2">
-                <b-card bg-variant="primary"
+                <b-card 
                         text-variant="white"
                         header="News feed &#9000;"
                         class="Deck1">
@@ -68,19 +103,19 @@
 
 
         <b-modal ref="myModalRefSignin" hide-footer title="Sign-In" no-close-on-backdrop>
-            <div class="d-block text-center">
+            <div class="d-block">
                 <h3>Email</h3>
-                <b-form-input id="input-small" size="sm" type="text" placeholder="Enter your email" v-model="signinEmail"></b-form-input>
+                <b-form-input size="sm" type="text" placeholder="Enter your email" v-model="signinEmail"></b-form-input>
 
                 <h3>Password</h3>
-                <b-form-input id="input-small" size="sm" type="password" placeholder="Enter your password" v-model="signinPassword"></b-form-input>
+                <b-form-input size="sm" type="password" placeholder="Enter your password" v-model="signinPassword"></b-form-input>
             </div>
-            <b-btn class="mt-3" variant="outline-success" block @click="SigninUser">Sign-in</b-btn>
+            <b-btn class="mt-4" variant="outline-success" block @click="SigninUser">Sign-in</b-btn>
         </b-modal>
 
         
         <b-modal ref="myModalRefSignup" hide-footer title="Sign-Up" no-close-on-backdrop>
-          <div class="d-block text-center">
+          <div class="d-block">
 
             <h3>Firstname</h3>
             <b-form-input id="" size="sm" type="text" placeholder="Enter your firstname" v-model="signupFirstname"></b-form-input>
@@ -109,14 +144,26 @@
         {
             data() {
                 return {
+                    slide: 0,
+                    sliding: null,
                     signupEmail: '',
                     signupPassword: '',
                     signinEmail: '',
                     signinPassword: '',
+                    signupFirstname:'',
+                    signupLastname:'',
                 }
             },
              methods:
              {
+                onSlideStart (slide) {
+                this.sliding = true
+                },
+
+                onSlideEnd (slide) {
+                this.sliding = false
+                },
+
                 ShowSignIn () 
                 {
                     this.$refs.myModalRefSignin.show()
@@ -157,8 +204,7 @@
 
                     firebase.auth().createUserWithEmailAndPassword(signEmail, signPass).then((user) => {
 
-                        firebase.auth().currentUser.updateProfile({
-                            
+                        firebase.auth().currentUser.updateProfile({ 
                             displayName: `${signFirstname} ${signLastname}`
                         
                         })
@@ -186,6 +232,25 @@
 
   <style>
 
+      .d-block text-center
+      {
+          width: 40%;
+      }
+
+    .fixed
+    {
+        /* background: linear-gradient(to right, #606c88, #3f4c6b); */
+        /* background: linear-gradient(to right, #182848, #3f4c6b); */
+            /* background: linear-gradient(to right, #536976, #292E49); */
+        /* background: linear-gradient(to right, #2b5876, #314755); */
+        background: linear-gradient(to right, #182848, #2b5876);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+    }
+
     .text-light
     {
         margin: 0;
@@ -199,9 +264,16 @@
     {
       text-align: center;
       font-size: 30px;
+      /* background: linear-gradient(to right, #182848, #2b5876); */
+    }
+
+    .aboutTindog .about
+    {
+        /* color: white; */
     }
     .aboutTindog .content
     {
+      /* color: white; */
       font-size: 20px;
     }
     .button
@@ -215,10 +287,14 @@
     }
     .text-center
     {
-      margin-top: 30px;
+        
+      /* margin-top: 30px; */
       border-radius: 5em;
-      margin-left: 10px;
-      margin-right: 10px;
+      /* margin-left: 10px;
+      margin-right: 10px; */
+      width: 70%;
+      margin: 0 auto;
+      margin-top: 30px;
     }
     .style
     {
@@ -242,6 +318,25 @@
     margin-top:20px;
     margin-left:10px;
     margin-right:10px;
+    
+    }
+
+    .d-block
+    {
+        text-align: center;
+    }
+
+    .deckClass .Deck1
+    {
+        background: linear-gradient(to right, #4b6cb7);
+    }
+    .deckClass .Deck2
+    {
+        background: linear-gradient(to right, #182848);
+    }
+    .deckClass .Deck3
+    {
+        background: linear-gradient(to right, #2980B9);
     }
     .deckClass header
     {

@@ -24,43 +24,6 @@
             <sell-tag v-if="selltagDisplay"/>
             <sell-clothes v-if="sellclothesDisplay"/>
 
-            <!-- <div class="fixedIcon">
-                <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
-            </div> -->
-<!-- 
-            <b-modal ref="addNewfeeds" hide-footer title="Post News">
-                <div class="d-block text-center">
-
-                    <h3>Name of Product</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
-        
-                    <h3>Breed of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter breed of dog" v-model="breedofDog"></b-form-input>
-
-                    <h3>Age of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
-
-                    <h3>Sex</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
-
-                    <b-form-textarea id=""
-                        v-model="text"
-                        placeholder="Enter something"
-                        :rows="3"
-                        :max-rows="6"
-                        class="textareaDesign">
-                    </b-form-textarea>
-    
-                    <b-form-file v-model="file" :state="Boolean(file)" placeholder="Upload a photo.." @change="getFileName"></b-form-file>
-    
-                    <div class="textarea-button">
-                        <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
-                        <b-button class="d-inline" variant="outline-danger" @click="cancelPost">Cancel</b-button>
-                    </div>
-                </div>
-            </b-modal> -->
-
-
             <b-modal ref="messageSend" hide-footer title="Message Owner" no-close-on-backdrop>
                     <div class="d-block text-center">
                         <b-form-textarea id=""
@@ -109,6 +72,7 @@
                     text: '',
                     file: null,
                     feeds: [],
+                    sendMessage: '',
                     sellcageDisplay: true,
                     sellfoodDisplay: false,
                     sellchainDisplay: false,

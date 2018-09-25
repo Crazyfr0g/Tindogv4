@@ -10,6 +10,10 @@ export default {
 }
 </script>
 
+  ready()
+  {
+    this.
+  }
 
 <style>
   

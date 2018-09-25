@@ -8,7 +8,6 @@ import NotificationPage from '@/Pages/NotificationPage/NotificationPage'
 import BreedingPage from '@/Pages/BreedingPage/BreedingPage'
 import AccessoriesPage from '@/Pages/AccessoriesPage/AccessoriesPage'
 
-// import Sample from '@/Pages/Sample/Sample'
 import SampleProf from '@/Pages/Sample/SampleProfile'
 
 import 'bootstrap/dist/css/bootstrap.css'

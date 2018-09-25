@@ -372,6 +372,12 @@
         {
             margin-top: 15px;
         }
+
+        .media-button
+        {
+            margin: 0;
+            margin-top: 50px;
+        }
     
     </style>
     

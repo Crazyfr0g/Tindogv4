@@ -46,7 +46,7 @@
 
                 <div class="textarea-button">
                     <b-button class="d-inline" variant="outline-success" @click="sendMessage">Send</b-button>
-                    <b-button class="d-inline" variant="outline-danger" @click="cancelMessage">Cancel</b-button>
+                    <b-button class="d-inline" variant="outline-danger">Cancel</b-button>
                 </div>
             </div>
         </b-modal>
@@ -81,7 +81,7 @@
     
                     <div class="textarea-button">
                         <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
-                        <b-button class="d-inline" variant="outline-danger" @click="cancelPost">Cancel</b-button>
+                        <b-button class="d-inline" variant="outline-danger">Cancel</b-button>
                     </div>
                 </div>
         </b-modal>
@@ -91,164 +91,165 @@
 </template>
 
 <script>
-    import firebase from 'firebase'
-    export default
+import firebase from 'firebase'
+export default
+{
+    name: 'sell-cage',
+    
+    data () 
     {
-        name: 'sell-cage',
-        
-        data () 
+        return{
+            typeofProduct:'',
+            nameofProduct: '',
+            abouttheDog: '',
+            specificationProduct: '',
+            priceofProduct: '',
+            availsizeofProduct: '',
+            availcolorofProduct: '',
+            cancelPost:'',  
+            text:'',
+            messageContent:'',
+            file: null,
+            image: null,
+            feeds: [],
+            data:[],
+        }
+    },
+
+    created()
+    {
+        this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+        this.displayName = firebase.auth().currentUser.displayName
+        this.liveAddingPost()
+    },
+
+    methods:
+    {
+        addfeed()
         {
-            return{
-                typeofProduct:'',
-                nameofProduct: '',
-                abouttheDog: '',
-                specificationProduct: '',
-                priceofProduct: '',
-                availsizeofProduct: '',
-                availcolorofProduct: '',
-                cancelPost:'',  
-                text:'',
-                messageContent:'',
-                file: null,
-                image: null,
-                feeds: [],
-                data:[],
-            }
+            this.$refs.addNewfeeds.show()
         },
 
-        created()
-        {
-            this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
-            this.displayName = firebase.auth().currentUser.displayName
-            this.liveAddingPost()
+        clickMessage(uid)
+        {      
+            this.uid = uid
+            console.log(uid)
+            this.$refs.messageSend.show() 
+            
         },
 
-        methods:
+        sendMessage()
         {
-            addfeed()
-            {
-                this.$refs.addNewfeeds.show()
-            },
+            let valmessage = this.messageContent  
+            this.senderuid = firebase.auth().currentUser.uid
 
-            clickMessage(uid)
-            {      
-                this.uid = uid
-                console.log(uid)
-                this.$refs.messageSend.show() 
-              
-            },
-
-            sendMessage()
-            {
-                let valmessage = this.messageContent  
-                this.senderuid = firebase.auth().currentUser.uid
-
-                firebase.database().ref(`Users/${this.uid}/Messages`).push({
-                            Sender: this.displayName,
-                            Message: valmessage,
-                            DateandTime: this.date,
-                            Senderuid: this.senderuid
-                        }).then(post => {
-                            this.$refs.messageSend.hide()
-                            this.messageContent = ''
-                        })                    
-            },
-
-            postFeed()
-            {
-                let sellername = this.displayName
-                let productType = this.typeofProduct
-                let productName = this.nameofProduct
-                let productColor = this.availcolorofProduct
-                let productSize = this.availsizeofProduct
-                let productPrice = this.priceofProduct
-                let productSpecification = this.specificationProduct
-                let imageUpload = this.image
-                let uid = firebase.auth().currentUser.uid
-                let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
-
-                let newPostkey = firebase.database().ref(`Users/${uid}/AccessoriesPost/Cages`).push({
-                        Sellername: sellername,
-                        Typeofproduct: productType,
-                        Productname: productName,
-                        Productcolor: productColor,
-                        Productsize: productSize,
-                        Productprice: productPrice,
-                        Productspecification: productSpecification,
-                        uid,
-                        date
-                }).then(data => {
-                    let key = data.key
-                    firebase.storage().ref(`Images/Accessoriesfeed/Cages/${key}`).put(imageUpload)
-                    firebase.database().ref(`Accessories/Cages/${key}`).set({ 
-                        Sellername: sellername,
-                        Typeofproduct: productType,
-                        Productname: productName,
-                        Productcolor: productColor,
-                        Productsize: productSize,
-                        Productprice: productPrice,
-                        Productspecification: productSpecification,
-                        uid,
-                        date
+            firebase.database().ref(`Users/${this.uid}/Messages`).push({
+                        Sender: this.displayName,
+                        Message: valmessage,
+                        DateandTime: this.date,
+                        Senderuid: this.senderuid
                     }).then(post => {
-                        this.text = ''
-                        this.image = ''
-                        this.$refs.addNewfeeds.hide()
-                    })
-                })
+                        this.$refs.messageSend.hide()
+                        this.messageContent = ''
+                    })                    
+        },
 
-                },
-        
+        postFeed()
+        {
+            let productType = "Cage"
+            let sellername = this.displayName
+            // let productType = this.typeofProduct
+            let productName = this.nameofProduct
+            let productColor = this.availcolorofProduct
+            let productSize = this.availsizeofProduct
+            let productPrice = this.priceofProduct
+            let productSpecification = this.specificationProduct
+            let imageUpload = this.image
+            let uid = firebase.auth().currentUser.uid
+            let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
+
+            let newPostkey = firebase.database().ref(`Users/${uid}/AccessoriesPost/Cages`).push({
+                    Sellername: sellername,
+                    Typeofproduct: productType,
+                    Productname: productName,
+                    Productcolor: productColor,
+                    Productsize: productSize,
+                    Productprice: productPrice,
+                    Productspecification: productSpecification,
+                    uid,
+                    date
+            }).then(data => {
+                let key = data.key
+                firebase.storage().ref(`Images/Accessoriesfeed/Cages/${key}`).put(imageUpload)
+                firebase.database().ref(`Accessories/Cages/${key}`).set({ 
+                    Sellername: sellername,
+                    Typeofproduct: productType,
+                    Productname: productName,
+                    Productcolor: productColor,
+                    Productsize: productSize,
+                    Productprice: productPrice,
+                    Productspecification: productSpecification,
+                    uid,
+                    date
+                }).then(post => {
+                    this.text = ''
+                    this.image = ''
+                    this.$refs.addNewfeeds.hide()
+                })
+            })
+
+            },
     
 
-            liveAddingPost()
-            {
-                firebase.database().ref('Accessories/Cages').on('value',snap => {
-                    let feedArray = []
-                    let promiseArr = []
-                    snap.forEach(childSnap => {
-                        let valSellername = childSnap.val().Sellername
-                        let valProcductype = childSnap.val().Typeofproduct
-                        let valProductname = childSnap.val().Productname
-                        let valProductcolor = childSnap.val().Productcolor
-                        let valProductsize = childSnap.val().Productsize
-                        let valProductprice = childSnap.val().Productprice
-                        let valProductSpec = childSnap.val().Productspecification
-                        let valDate = childSnap.val().date
-                        let valId = childSnap.val().uid
 
-                        let promise = firebase.storage().ref(`Images/Accessoriesfeed/Cages/${childSnap.key}`).getDownloadURL().then(url => {
-                            return { 
-                                key: childSnap.key,
-                                image: url,
-                                uid: valId,
-                                date: valDate,
-                                nameofseller: valSellername,
-                                productype: valProcductype,
-                                productname: valProductname,
-                                productcolor: valProductcolor,
-                                productsize: valProductsize,
-                                productprice: valProductprice,
-                                productspec: valProductSpec
+        liveAddingPost()
+        {
+            firebase.database().ref('Accessories/Cages').on('value',snap => {
+                let feedArray = []
+                let promiseArr = []
+                snap.forEach(childSnap => {
+                    let valSellername = childSnap.val().Sellername
+                    let valProductype = childSnap.val().Typeofproduct
+                    let valProductname = childSnap.val().Productname
+                    let valProductcolor = childSnap.val().Productcolor
+                    let valProductsize = childSnap.val().Productsize
+                    let valProductprice = childSnap.val().Productprice
+                    let valProductSpec = childSnap.val().Productspecification
+                    let valDate = childSnap.val().date
+                    let valId = childSnap.val().uid
 
-                            }
-                        })
-                        promiseArr.push(promise)
+                    let promise = firebase.storage().ref(`Images/Accessoriesfeed/Cages/${childSnap.key}`).getDownloadURL().then(url => {
+                        return { 
+                            key: childSnap.key,
+                            image: url,
+                            uid: valId,
+                            date: valDate,
+                            nameofseller: valSellername,
+                            productype: valProductype,
+                            productname: valProductname,
+                            productcolor: valProductcolor,
+                            productsize: valProductsize,
+                            productprice: valProductprice,
+                            productspec: valProductSpec
+
+                        }
                     })
+                    promiseArr.push(promise)
+                })
 
-                    Promise.all(promiseArr).then(values => {
-                        values.sort(function(a, b) {
-                            var dateA = new Date(a.date);
-                            var dateB = new Date(b.date);
-                            return dateA - dateB;
-                        }).reverse()
-                        this.feeds = values
-                    })
-                    
-                }) 
-            },
-         }  
-    }
+                Promise.all(promiseArr).then(values => {
+                    values.sort(function(a, b) {
+                        var dateA = new Date(a.date);
+                        var dateB = new Date(b.date);
+                        return dateA - dateB;
+                    }).reverse()
+                    this.feeds = values
+                })
+                
+            }) 
+        },
+    }  
+}
    
 </script>
 
