@@ -1,16 +1,9 @@
 <template>
-    <div id="Style" class="paddingTop">
-            <!-- type="dark" variant="info" -->
+    <div id="Style">
       <b-navbar toggleable="md" class="fixed">
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
           <b-navbar-brand href="#" id="LogoStyle" variant="dark"><p class="text-light font" >Tindog &#128021;</p></b-navbar-brand>
-        <!-- <b-nav-form>
-              <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Types of Dogs"/>
-              <b-button size="sm" class="my-2 my-sm-0" type="submi"t variant="light">Search</b-button>
-        </b-nav-form> -->
-
         <b-collapse is-nav id="nav_collapse" type="dark">
-          <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto" variant="dark">
             <b-button @click="ShowSignIn" class="spacing" variant="light">
                     Sign-In
@@ -29,32 +22,26 @@
         indicators
         :interval="3000"
         img-width="1024"
-        img-height="380"
+        img-height="420"
         v-model="slide"
         @sliding-start="onSlideStart"
         @sliding-end="onSlideEnd">
 
-        <!-- Text slides with image -->
-        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=1062">
+   
+        <b-carousel-slide img-src="https://picsum.photos/1024/450/?image=1062">
         </b-carousel-slide>
 
-        <!-- Slides with custom text -->
-        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=837">
+        <b-carousel-slide img-src="https://picsum.photos/1024/450/?image=837">
         </b-carousel-slide>
 
-        <!-- Slides with image only -->
-        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=659">
+        <b-carousel-slide img-src="https://picsum.photos/1024/450/?image=659">
         </b-carousel-slide>
 
-        <!-- Slides with img slot -->
-        <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=237">
+        <b-carousel-slide img-src="https://picsum.photos/1024/450/?image=237">
         </b-carousel-slide>
 
-        <b-carousel-slide img-src="https://picsum.photos/1024/380/?image=169">
+        <b-carousel-slide img-src="https://picsum.photos/1024/450/?image=169">
         </b-carousel-slide>
-
-
 
         </b-carousel>
 
@@ -79,13 +66,15 @@
                         class="Deck1">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </b-card>
-                <b-card bg-variant="secondary"
+
+                <b-card 
                         text-variant="white"
                         header="Selling &#128176;"
                         class="Deck2">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </b-card>
-                <b-card bg-variant="success"
+
+                <b-card 
                         text-variant="white"
                         header="Dog Breeding &#128054;"
                         class="Deck3">
@@ -100,7 +89,6 @@
                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus deleniti dolorem vitae, exercitationem cumque esse? Autem doloribus corrupti fuga? Explicabo repudiandae debitis nemo nisi hic     molestias nulla, porro voluptatum vero facere id, accusantium odit quis consectetur pariatur, quo voluptatibus possimus voluptatem non recusandae dolores! Ratione ut illo tempora necessitatibus enim, id inventore maiores, modi quisquam a quidem dolores sed ea. Ea, ullam consectetur cumque earum repellendus officia, harum cupiditate consequuntur quia, deleniti quaerat accusamus itaque facere magni voluptatibus quo! Cupiditate provident illo praesentium neque, odio nobis, dignissimos est aut commodi dolores, incidunt repellendus! Natus doloremque, nobis asperiores cupiditate iusto esse!
             </p>
         </div>
-
 
         <b-modal ref="myModalRefSignin" hide-footer title="Sign-In" no-close-on-backdrop>
             <div class="d-block">
@@ -136,113 +124,110 @@
     </div>
   </template>
 
-    <script>
+<script>
 
-    import firebase from 'firebase'
-     export default 
+import firebase from 'firebase'
 
-        {
-            data() {
-                return {
-                    slide: 0,
-                    sliding: null,
-                    signupEmail: '',
-                    signupPassword: '',
-                    signinEmail: '',
-                    signinPassword: '',
-                    signupFirstname:'',
-                    signupLastname:'',
-                }
+    export default 
+    
+    {
+        data() {
+            return {
+                slide: 0,
+                sliding: null,
+                signupEmail: '',
+                signupPassword: '',
+                signinEmail: '',
+                signinPassword: '',
+                signupFirstname:'',
+                signupLastname:'',
+            }
+        },
+            methods:
+            {
+            onSlideStart (slide) {
+            this.sliding = true
             },
-             methods:
-             {
-                onSlideStart (slide) {
-                this.sliding = true
-                },
 
-                onSlideEnd (slide) {
-                this.sliding = false
-                },
+            onSlideEnd (slide) {
+            this.sliding = false
+            },
 
-                ShowSignIn () 
-                {
-                    this.$refs.myModalRefSignin.show()
-                },
+            ShowSignIn () 
+            {
+                this.$refs.myModalRefSignin.show()
+            },
 
-                ShowSignUp ()
-                {
-                    this.$refs.myModalRefSignup.show()
-                },
+            ShowSignUp ()
+            {
+                this.$refs.myModalRefSignup.show()
+            },
 
-                SigninUser ()
-                {
-                    let logEmail = this.signinEmail
-                    let logPass = this.signinPassword
+            SigninUser ()
+            {
+                let logEmail = this.signinEmail
+                let logPass = this.signinPassword
 
+                
+                firebase.auth().signInWithEmailAndPassword(logEmail, logPass)
+                .then((user) => {
+                    this.$router.push('/Home')
+                })
+                .catch(function(error) {
+        
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        console.log(error)
+                });
+
+                this.signinEmail = ""
+                this.signinPassword = ""
+            },
+
+            signupUser ()
+            {
+                let signFirstname = this.signupFirstname
+                let signLastname = this.signupLastname
+                let signEmail = this.signupEmail
+                let signPass = this.signupPassword
+
+                firebase.auth().createUserWithEmailAndPassword(signEmail, signPass).then((user) => {
+
+                    firebase.auth().currentUser.updateProfile({ 
+                        displayName: `${signFirstname} ${signLastname}`
                     
-                    firebase.auth().signInWithEmailAndPassword(logEmail, logPass)
-                    .then((user) => {
-                        this.$router.push('/Home')
                     })
-                    .catch(function(error) {
-          
-                         var errorCode = error.code;
-                         var errorMessage = error.message;
-                         console.log(error)
-                    });
 
-                    this.signinEmail = ""
-                    this.signinPassword = ""
-                },
+                    let uid = firebase.auth().currentUser.uid
+                        firebase.database().ref(`Users/${uid}`).set({
+                            firstname: signFirstname,
+                            lastname: signLastname,
+                            email: signEmail,
+                            password: signPass
+                    })
+                
+                });
 
-                signupUser ()
-                {
-                    let signFirstname = this.signupFirstname
-                    let signLastname = this.signupLastname
-                    let signEmail = this.signupEmail
-                    let signPass = this.signupPassword
-
-                    firebase.auth().createUserWithEmailAndPassword(signEmail, signPass).then((user) => {
-
-                        firebase.auth().currentUser.updateProfile({ 
-                            displayName: `${signFirstname} ${signLastname}`
-                        
-                        })
-
-                        let uid = firebase.auth().currentUser.uid
-                            firebase.database().ref(`Users/${uid}`).set({
-                                firstname: signFirstname,
-                                lastname: signLastname,
-                                email: signEmail,
-                                password: signPass
-                        })
-                    
-                    });
-
-                    this.signupEmail = ""
-                    this.signupPassword = ""
-                    this.$refs.myModalRefSignup.hide()
-                }
+                this.signupEmail = ""
+                this.signupPassword = ""
+                this.$refs.myModalRefSignup.hide()
             }
         }
+    }
 
-    </script>
-  
-  
+</script>
 
-  <style>
 
-      .d-block text-center
-      {
-          width: 40%;
-      }
+
+<style>
+
+    .d-block text-center
+    {
+        width: 40%;
+    }
 
     .fixed
     {
-        /* background: linear-gradient(to right, #606c88, #3f4c6b); */
-        /* background: linear-gradient(to right, #182848, #3f4c6b); */
-            /* background: linear-gradient(to right, #536976, #292E49); */
-        /* background: linear-gradient(to right, #2b5876, #314755); */
         background: linear-gradient(to right, #182848, #2b5876);
         position: fixed;
         top: 0;
@@ -260,65 +245,60 @@
     {
         margin: 10px;
     }
+
     .aboutTindog
     {
-      text-align: center;
-      font-size: 30px;
-      /* background: linear-gradient(to right, #182848, #2b5876); */
+        text-align: center;
+        font-size: 30px;
     }
 
-    .aboutTindog .about
-    {
-        /* color: white; */
-    }
     .aboutTindog .content
     {
-      /* color: white; */
-      font-size: 20px;
+        font-size: 20px;
     }
+
     .button
     {
-      width: 100px;
+        width: 100px;
     }
+
     .intro
     {
-      margin-top: 30px;
-      text-align: center;
+        margin-top: 30px;
+        text-align: center;
     }
+
     .text-center
     {
-        
-      /* margin-top: 30px; */
-      border-radius: 5em;
-      /* margin-left: 10px;
-      margin-right: 10px; */
-      width: 70%;
-      margin: 0 auto;
-      margin-top: 30px;
+        border-radius: 2em;
+        width: 70%;
+        margin: 0 auto;
+        margin-top: 30px;
     }
+
     .style
-    {
-      
-      text-align: center;
-      font-size: 50px;
-      margin: 0 auto;
-  
+    {    
+        text-align: center;
+        font-size: 50px;
+        margin: 0 auto;  
     }
+
     #Logostyle
     {
-      font-size: 30px;
-      color: white;
+        font-size: 30px;
+        color: white;
     }
+
     .font
     {
-      font-size: 30px;
+        font-size: 30px;
     }
+
     .deckClass
     {
-    margin-top:20px;
-    margin-left:10px;
-    margin-right:10px;
-    
+        margin-top:20px;
+        margin-left:10px;
+        margin-right:10px;
     }
 
     .d-block
@@ -326,27 +306,28 @@
         text-align: center;
     }
 
-    .deckClass .Deck1
+    .Deck1
     {
-        background: linear-gradient(to right, #4b6cb7);
+        /* background: linear-gradient(to right, #4b6cb7); */
+        background-color: #4b6cb7;
     }
-    .deckClass .Deck2
+
+   .Deck2
     {
-        background: linear-gradient(to right, #182848);
+        /* background: linear-gradient(to right, #182848); */
+        background-color: #182848;
     }
-    .deckClass .Deck3
+
+    .Deck3
     {
-        background: linear-gradient(to right, #2980B9);
+        /* background: linear-gradient(to right, #2980B9); */
+        background-color: #2980B9;
     }
+
     .deckClass header
     {
     font-size: 30px;
     }
 
-    .Deck3
-    {
-      margin: 0 auto;
-    }
-
-  </style>
+</style>
 

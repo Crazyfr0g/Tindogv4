@@ -10,31 +10,14 @@
                 <p class="profile">{{ displayEmail }}</p>
             </div><br>
 
+            <div class="buttonStyle">
+            <b-button class="d-inline" variant="outline-success" @click="RecievedMessages">RecievedMessages</b-button>
+            <b-button class="d-inline" variant="outline-danger" @click="SentMessages">SentMessages</b-button>
+            </div>
 
-            <b-card class="bcardWidth" fluid v-b-scrollspy:scroll  style="position:relative; height:500px; overflow-y:scroll;">
-                <div class="editIcon">
-                    <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
-                </div>
-                
-                <div id="scroll">
-                    <p class="messageCenter"><i>Messages</i></p>
-                    <hr width="250"/>
-                    <div v-for="(feed, i) in feeds" :key="feed.key" class="editIconArea">
-                        <ul class="list-unstyled">
-                            <b-media tag="li"class="my-6">
-                                <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
-                                    <h5 class="mt-0 mb-1"> {{ feed.sender }}</h5>
-                                    <p> {{ feed.message }} </p>
-                            </b-media>
-                        </ul>  
-                        <b-button class="d-inline" variant="outline-success" @click="sendReply(feed.senderuid)">Reply</b-button>
-                        <b-button class="d-inline" variant="outline-danger" @click="deleteReply(feed.senderuid)">Delete</b-button>
-                        <hr width="600"/>
-                    </div>
-                </div>
-            </b-card>
+            <recieve-Messages v-if="recieveDisplay"/> 
+            <sent-Messages v-if="sentDisplay"/> 
 
-    
             <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
                 <div class="d-block text-center">
                     <b-form-textarea id=""
@@ -66,10 +49,6 @@
             </b-modal>
 
             <b-card class="bcardWidth">
-                    <div class="editIcon">
-                        <i class="fa fa-cog fa-3x" aria-hidden="true"></i> 
-                    </div>
-
                     <p class="messageCenter"><i>Previous Feed</i></p>
                         <hr width="250"/>
                     <div class="editIconArea">
@@ -85,28 +64,6 @@
                         </ul>      
                     </div>
             </b-card> 
-
-                <b-card class="bcardWidth">
-                        <div class="editIcon">
-                            <i class="fa fa-usd fa-3x" aria-hidden="true"></i>
-                        </div>
-    
-                        <p class="messageCenter"><i>Messages</i></p>
-                            <hr width="250"/>
-                        <div class="editIconArea">
-                            <ul class="list-unstyled">
-                                <b-media tag="li"class="my-4">
-                                    <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
-                                        <h5 class="mt-0 mb-1">List-based media object</h5>
-                                        Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                        ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                        viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                        lacinia congue felis in faucibus.
-                                </b-media>                       
-                            </ul>          
-                            <b-pagination-nav align="center"  :number-of-pages="10" v-model="currentPage"/>
-                        </div>
-                </b-card>
             
         </div>
     </template>
@@ -114,13 +71,18 @@
     <script>
         
         import firebase from 'firebase'
+        import SentMessages from '../../components/sentMessages.vue'
+        import RecieveMessages from '../../components/recieveMessages.vue'
         import Navbar from '../../components/NavBar.vue'
+        
             export default 
             {
 
                 components:
                 {
-                    Navbar
+                    Navbar,
+                    SentMessages,
+                    RecieveMessages
                 },
 
                 data()
@@ -131,6 +93,8 @@
                         displayName: '',
                         currentPage: null,
                         messageContent:'',
+                        recieveDisplay: true,
+                        sentDisplay: false
                         
                     }
                 },
@@ -140,9 +104,30 @@
                     this.gettingMessages()
                 },
 
+                computed:
+                {
+                    feedList()
+                    {
+                        console.log(this.feeds)
+                        return this.feeds.reverse()       
+                    }
+                },
+
 
                 methods:
                 {
+                    RecievedMessages()
+                    {
+                        this.recieveDisplay = true
+                        this.sentDisplay = false
+                    },
+
+                    SentMessages()
+                    {
+                        this.sentDisplay = true
+                        this.recieveDisplay = false
+                    },
+
                     sendReply(senderuid)
                     {
                         console.log(senderuid)
@@ -150,12 +135,14 @@
                         this.$refs.messageSend.show() 
                     },
 
+                    cancelMessage()
+                    {
+                        this.$refs.messageSend.hide() 
+                    },
+
                     deleteReply(senderuid)
                     {
                         console.log(senderuid)
-                        this.recieve = senderuid
-                        
-                        firebase.database().ref.childSnap(`Users/${this.recieve}/Messages`).remove()           
                     },
 
                     sendMessage()
@@ -163,7 +150,7 @@
                         let valmessage = this.messageContent  
                         this.senderuid = firebase.auth().currentUser.uid
 
-                        firebase.database().ref(`Users/${this.recieve}/Messages`).push({
+                        firebase.database().ref(`Users/${this.recieve}/RecieveMessages`).push({
                             Sender: this.displayName,
                             Message: valmessage,
                             DateandTime: this.date,
@@ -171,7 +158,20 @@
                             }).then(post => {
                                 this.$refs.messageSend.hide()
                                 this.messageContent = ''
-                        })                    
+                        }) 
+
+                        
+                        firebase.database().ref(`Users/${this.senderuid}/SentMessages`).push({
+                            Sender: this.displayName,
+                            Message: valmessage,
+                            DateandTime: this.date,
+                            Senderuid: this.senderuid
+                            }).then(post => {
+                                this.$refs.messageSend.hide()
+                                this.messageContent = ''
+                        }) 
+
+
                     },
 
                     gettingMessages()
@@ -182,7 +182,8 @@
                         this.uid = firebase.auth().currentUser.uid
                         this.date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
                 
-                            firebase.database().ref(`Users/${this.uid}/Messages`).on('value',snap => {
+                           firebase.database().ref(`Users/${this.uid}/RecieveMessages`).on('value',snap => {
+                               
 
                             let feedArray = []
                             snap.forEach(childSnap => {
@@ -199,7 +200,6 @@
                             })
                                 this.feeds = feedArray 
                         })
-
                     },
                 }
     
@@ -207,6 +207,11 @@
     </script>
     
     <style>
+
+        .buttonStyle
+        {
+            text-align: center;
+        }
 
         .editIconArea
         {
@@ -230,7 +235,6 @@
         
         .postIcon
         {
-            /* text-align: center; */
             margin-bottom: 5%;
         }
 
@@ -264,11 +268,7 @@
             margin: 0 auto;
             text-align: center;
         }
-        /* .clearfixMargin
-        {
-            display: flex;
-        }
-     */
+
         .ImageStyle
         {
             width: 75%;
@@ -276,31 +276,20 @@
            margin: 0 auto;
            margin-bottom: 5%;;
         }
-    
-        /* .ImageStyle2
-        {
-            width: 50%;
-        } */
-        
+  
         .ImageStyle .profile
         {
             margin-top: 15px;
             text-align: center;
             font-size: 25px;
-    
         }
-        /* .ImageStyle2 i{
-            padding-left: 50px;
-        } */
-    
+
     
         .message
         {
             width: 30%;
         }
-    
-
-    
+        
         .textarea .titlePage
         {
             margin: 0 auto;
@@ -311,6 +300,7 @@
             width: 200px;
             border-radius: 5px;
         }
+
         .text-light
         {
             margin-right: 20px;
@@ -325,12 +315,7 @@
             margin-bottom: 30px;
     
         }
-    
-    
-        /* .tabStyle
-        {
-            width: 75%;
-        } */
+        
     </style>
     
     

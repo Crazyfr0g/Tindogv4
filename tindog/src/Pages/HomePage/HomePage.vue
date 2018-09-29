@@ -114,7 +114,7 @@
                         this.image = null
                         this.$refs.addNewfeeds.hide()         
                     })
-                })
+                })        
                 
             },
 
@@ -148,7 +148,6 @@
                             }
                         })
                         promiseArr.push(promise)
-                        // console.log(promiseArr)
                     })
 
                     Promise.all(promiseArr).then(values => {
@@ -160,8 +159,8 @@
                         this.feeds = values
                     })  
                 }) 
-            }
-    }   
+            }   
+        }
         
     }
 </script>

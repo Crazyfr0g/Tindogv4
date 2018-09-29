@@ -3,8 +3,8 @@
             <navbar/>
             <div class="textarea">
                 <p class="titlePage">Breeding</p>
-            </div> 
-
+            </div>
+            
             <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
             </div>
@@ -14,15 +14,18 @@
 
                     <h3>Name of dog</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
-        
+                    
+                    <h3>Type of breed</h3>
+                    <b-form-select v-model="typeofBreed" :options="typeBreed" class="mb-3" text="aw"></b-form-select>
+
                     <h3>Breed of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter breed of dog" v-model="breedofDog"></b-form-input>
+                    <b-form-select v-model="breedofDog" :options="breedDog" class="mb-3" fluid v-b-scrollspy:scroll style="position:relative; overflow-y:scroll;"></b-form-select>
 
                     <h3>Age of dog</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
 
                     <h3>Sex</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
+                    <b-form-select v-model="sexofDog" :options="sexDog" class="mb-3"> </b-form-select>
                 
                     <b-form-textarea id=""
                         v-model="abouttheDog"
@@ -61,6 +64,7 @@
                     <div class="bcardContent2">  
                         <p>Name of dog: {{ feed.nameofdog }}</p>
                         <p>Breed of dog: {{ feed.breedofdog }}</p>
+                        <p>Breed type of dog: {{ feed.breedtypeofdog }}</p>
                         <p>Age of dog: {{ feed.ageofdog }}</p>
                         <p>Sex: {{ feed.sexofdog }} </p>
                         <p>Information: {{ feed.infoofdog }}</p>
@@ -108,15 +112,93 @@
               {
                 return {
                     // abouttheDog: '',
-                    file: null,
+               
                     feeds: [],
                     nameofDog: '',
                     breedofDog: '',
                     ageofDog: '',
                     sexofDog: '',
                     abouttheDog:'',
-                    image: null,
                     messageContent:'',
+                    typeBreed: '',
+                    breedDog: '',
+                    sexDog: '',
+                    file: null,
+                    image: null,
+                    typeofBreed: '',
+                    breedofDog: '',
+                    sexofDog: '',
+
+                    typeBreed:[
+                        { value: 'Pure breed', text: 'Pure breed' },
+                        { value: 'Half breed', text: 'Half breed' },
+                        { value: 'Mix breed', text: 'Mix breed' },
+                    ],
+
+                    breedDog: [
+                        { value: 'American Bulldog', text: 'American Bulldog' },
+                        { value: 'Alaskan Klee Kai', text: 'Alaskan Klee Kai' },
+                        { value: 'American Eskimo', text: 'American Eskimo' },
+                        { value: 'Basset Hound', text: 'Basset Hound' },
+                        { value: 'Beagle', text: 'Beagle' },
+                        { value: 'Beard Collie', text: 'Beard Collie' },
+                        { value: 'Bloodhound', text: 'Bloodhound' },
+                        { value: 'Boxer', text: 'Boxer' },
+                        { value: 'Brittany', text: 'Brittany' },
+                        { value: 'Bulldog', text: 'Bulldog' },
+                        { value: 'Bullmastiff', text: 'Bullmastiff' },
+                        { value: 'Husky', text: 'Husky' },
+                        { value: 'Cesky Terrier', text: 'Cesky Terrier' },
+                        { value: 'Chihuahua', text: 'Chihuahua' },
+                        { value: 'Chinese Created', text: 'Chinese Created' },
+                        { value: 'Chow chow', text: 'Chow chow' },
+                        { value: 'Collie', text: 'Collie' },
+                        { value: 'Coton de Tuclear', text: 'Coton de Tuclear' },
+                        { value: 'Dachshund', text: 'Dachshund' },
+                        { value: 'Dalmatian', text: 'Dalmatian' },
+                        { value: 'Doberman Pinscher', text: 'Doberman Pinsche' },
+                        { value: 'English Cocker Spaniel', text: 'English Cocker Spaniel' },
+                        { value: 'English Foxhound', text: 'English Foxhound' },
+                        { value: 'Field Spaniel', text: 'Field Spaniel' },
+                        { value: 'Finnish Lapphund', text: 'Finnish Lapphund' },
+                        { value: 'Finnish Spitz', text: 'Finnish Spitz' },
+                        { value: 'German Pinscher', text: 'German Pinscher' },
+                        { value: 'German Shepered Dog', text: 'German Shepered Dog' },
+                        { value: 'German Shorthaired Pointer', text: 'German Shorthaired Pointer' },
+                        { value: 'Goldador', text: 'Goldador' },
+                        { value: 'Golden Retriever', text: 'Golden Retriever' },
+                        { value: 'Goldendoodle', text: 'Goldendoodle' },
+                        { value: 'Great Dane', text: 'Great Dane' },
+                        { value: 'Greater Swiss Moutain Dog', text: 'Greater Swiss Moutain Dog' },
+                        { value: 'Greyhound', text: 'Greyhound' },
+                        { value: 'Japanese Spitz', text: 'Japanese Spitz' },
+                        { value: 'Labradoodle', text: 'Labradoodle' },
+                        { value: 'Labrador Retriever', text: 'Labrador Retriever' },
+                        { value: 'Maltese', text: 'Maltese' },
+                        { value: 'Maltese Shih Tzu', text: 'Maltese Shih Tzu' },
+                        { value: 'Mastiff', text: 'Mastiff' },
+                        { value: 'Miniature Pinscher', text: 'Miniature Pinscher' },
+                        { value: 'Mutt', text: 'Mutt' },
+                        { value: 'Old English Sheepdog', text: 'Old English Sheepdog' },
+                        { value: 'Papillon', text: 'Papillon' },
+                        { value: 'Pomeranian', text: 'Pomeranian' },
+                        { value: 'Pomsky', text: 'Pomsky' },
+                        { value: 'Poodle', text: 'Poodle' },
+                        { value: 'Pug', text: 'Pug' },
+                        { value: 'Puggle', text: 'Puggle' },
+                        { value: 'Saint Bernard', text: 'Saint Bernard' },
+                        { value: 'Shih Tzu', text: 'Shih Tzu' },
+                        { value: 'Siberian Husky', text: 'Siberian Husky' },
+                        { value: 'Yorkipoo', text: 'Yorkipoo' },
+                        { value: 'Yorkshire Terrier', text: 'Yorkshire Terrie' },
+
+                    ],
+
+                    sexDog: [
+                        { value: 'Male', text: 'Male' },
+                        { value: 'Female', text: 'Female' },
+                    ],
+
                 }
                 console.log(dropdownValue)
               },
@@ -132,6 +214,11 @@
     
              methods:{
 
+                searchbreedofDog()
+                {   
+
+                },
+
                 clickMessage(uid)
                     {
                         this.uid = uid
@@ -144,16 +231,27 @@
                         let valmessage = this.messageContent  
                         this.senderuid = firebase.auth().currentUser.uid
 
-                        firebase.database().ref(`Users/${this.uid}/Messages`).push({
-                                    Sender: this.displayName,
-                                    Message: valmessage,
-                                    DateandTime: this.date,
-                                    Senderuid: this.senderuid
-                                }).then(post => {
-                                    this.$refs.messageSend.hide()
-                                    this.messageContent = ''
-                                })                    
+                        firebase.database().ref(`Users/${this.uid}/RecieveMessages`).push({
+                            Sender: this.displayName,
+                            Message: valmessage,
+                            DateandTime: this.date,
+                            Senderuid: this.senderuid
+                        }).then(post => {
+                            this.$refs.messageSend.hide()
+                            this.messageContent = ''
+                        })    
+
+                        firebase.database().ref(`Users/${this.senderuid}/Messages/SentMessages`).push({
+                            Sender: this.displayName,
+                            Message: valmessage,
+                            DateandTime: this.date,
+                            Senderuid: this.senderuid
+                        }).then(post => {
+                            this.$refs.messageSend.hide()
+                            this.messageContent = ''
+                        })                      
                     },
+
                 addfeed()
                     {
                         this.$refs.addNewfeeds.show()
@@ -164,6 +262,7 @@
                      
                         let dogOwner = this.displayName
                         let dogName = this.nameofDog
+                        let dogBreedtype = this.typeofBreed
                         let dogBreed = this.breedofDog
                         let dogAge = this.ageofDog
                         let dogSex = this.sexofDog
@@ -176,6 +275,7 @@
                                 Dogowner: dogOwner,
                                 Nameofdog: dogName,
                                 Breedofdog: dogBreed,
+                                Breedtypeofdog: dogBreedtype,
                                 Ageofdog: dogAge,
                                 Sexofdog: dogSex,
                                 Doginformation:dogInformation,
@@ -188,6 +288,7 @@
                                 Dogowner: dogOwner,
                                 Nameofdog: dogName,
                                 Breedofdog: dogBreed,
+                                Breedtypeofdog: dogBreedtype,
                                 Ageofdog: dogAge,
                                 Sexofdog: dogSex,
                                 Doginformation:dogInformation,
@@ -213,6 +314,7 @@
                                 let valDate = childSnap.val().date                     
                                 let valNameofDog = childSnap.val().Nameofdog
                                 let valBreedofDog = childSnap.val().Breedofdog
+                                let valBreedtypeofDog = childSnap.val().Breedtypeofdog
                                 let valAgeofDog = childSnap.val().Ageofdog
                                 let valSexofDog = childSnap.val().Sexofdog
                                 let valId = childSnap.val().uid
@@ -226,6 +328,7 @@
                                         nameofowner: valDogowner,
                                         nameofdog: valNameofDog,
                                         breedofdog: valBreedofDog,
+                                        breedtypeofdog: valBreedtypeofDog,
                                         ageofdog: valAgeofDog,
                                         sexofdog: valSexofDog,
                                         uid: valId

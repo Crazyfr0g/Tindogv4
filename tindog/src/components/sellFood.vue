@@ -19,21 +19,20 @@
                     </div>
                 
                     <div class="bcardContent2">  
-                        <p>Product: {{ feed.productype }} </p>
+                        <p>Product: <i> {{ feed.productype }} </i></p>
                         <p>Name of Product: {{ feed.productname }} </p>
                         <p>Specific for: {{ feed.productspecfor }}</p>
                         <p>Food Contains: {{ feed.productcontains }}</p>
                         <p>Package Size: {{ feed.productsize }} </p>
 
                         <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message owner</b-button>
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
                         </div>    
                     </div>         
                 </div>
             </b-card>
 
             <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
-                <p>Seller ID: </p>
                 <div class="d-block text-center">
                     <b-form-textarea id=""
                         v-model="messageContent"
@@ -53,25 +52,22 @@
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                 <div class="d-block text-center">
 
-                    <h3>Product:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="typeofProduct"></b-form-input>
-
-                    <h3>Name of Product:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofProduct"></b-form-input>
+                    <h3>Name of Product</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="nameofProduct"></b-form-input>
         
-                    <h3>Specific for:</h3>
+                    <h3>Specific for</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Product is specific for" v-model="productSpecificfor"></b-form-input>
 
-                    <h3>Food Contains:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter colors avaible" v-model="containsofProduct"></b-form-input>
+                    <h3>Food Contains</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Food contains" v-model="containsofProduct"></b-form-input>
 
-                    <h3>Size Avaible:</h3>
+                    <h3>Size Avaible</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="availsizeofProduct"></b-form-input>
 
-                    <h3>Product Price:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="priceofProduct"></b-form-input>
+                    <h3>Price</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Price" v-model="priceofProduct"></b-form-input>
     
-                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
+                    <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.." class="formStyle"></b-form-file>
     
                     <div class="textarea-button">
                         <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
@@ -149,8 +145,8 @@
                 
             postFeed()
             {
+                let productType = "Food"
                 let sellername = this.displayName
-                let productType = this.typeofProduct
                 let productName = this.nameofProduct
                 let productSize = this.availsizeofProduct
                 let productPrice = this.priceofProduct
@@ -247,6 +243,11 @@
 </script>
 
 <style>
+
+        .formStyle
+        {
+            margin-top: 10px;
+        }
         
         .bcardStyle
         {

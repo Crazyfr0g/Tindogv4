@@ -26,7 +26,7 @@
                         <p>Customizable: {{ feed.productcustom }} </p>
 
                         <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message owner</b-button>
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
                         </div>    
                     </div>                
                 </div>
@@ -34,7 +34,6 @@
 
             
             <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
-                <p>Seller ID: </p>
                 <div class="d-block text-center">
                     <b-form-textarea id=""
                         v-model="messageContent"
@@ -53,29 +52,26 @@
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                     <div class="d-block text-center">
-    
-                        <h3>Product:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="typeofProduct"></b-form-input>
-    
-                        <h3>Name of Product:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofProduct"></b-form-input>
+
+                        <h3>Name of Product</h3>
+                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="nameofProduct"></b-form-input>
             
-                        <h3>Type of tag:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Product is specific for" v-model="typetagofProduct"></b-form-input>
+                        <h3>Type of tag</h3>
+                        <b-form-input id="" size="sm" type="text" placeholder="Enter type of tag" v-model="typetagofProduct"></b-form-input>
     
-                        <h3>Colors Available:</h3>
+                        <h3>Colors Available</h3>
                         <b-form-input id="" size="sm" type="text" placeholder="Enter colors avaible" v-model="colorsofProduct"></b-form-input>
     
-                        <h3>Size Avaible:</h3>
+                        <h3>Size Avaible</h3>
                         <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="availsizeofProduct"></b-form-input>
     
-                        <h3>Customizable:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="customizableProduct"></b-form-input>
+                        <h3>Customizable</h3>
+                        <b-form-select v-model="customofTag" :options="customTag" class="mb-3"></b-form-select>
                         
-                        <h3>Product price:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="priceofProduct"></b-form-input>
+                        <h3>Price</h3>
+                        <b-form-input id="" size="sm" type="text" placeholder="Price" v-model="priceofProduct"></b-form-input>
         
-                        <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
+                        <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.." class="formStyle"></b-form-file>
         
                         <div class="textarea-button">
                             <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
@@ -104,10 +100,17 @@
             cancelPost:'',  
             text:'',
             messageContent:'',
+            customofTag: '',
+            customTag: '',
             file: null,
             image: null,
             feeds: [],
             data:[],
+
+            customTag: [
+                { value: 'Yes', text: 'Yes' },
+                { value: 'No', text: 'No' },
+            ],
             }
         },
         
@@ -125,6 +128,12 @@
             addfeed()
             {
                 this.$refs.addNewfeeds.show()
+            },
+
+
+            cancelPost()
+            {
+                this.$refs.addNewfeeds.hide()
             },
             
 
@@ -154,13 +163,13 @@
 
             postFeed()
             {
+                let productType = "Tag"
                 let sellername = this.displayName
-                let productType = this.typeofProduct
                 let productName = this.nameofProduct
                 let producttagType = this.typetagofProduct
                 let productColor = this.colorsofProduct
                 let productSize = this.availsizeofProduct
-                let productCustom = this.customizableProduct
+                let productCustom = this.customofTag
                 let productPrice = this.priceofProduct
                 let imageUpload = this.image
                 let uid = firebase.auth().currentUser.uid
@@ -235,7 +244,6 @@
                             }
                         })
                         promiseArr.push(promise)
-                        // console.log(promiseArr)
                     })
 
                     Promise.all(promiseArr).then(values => {
@@ -280,13 +288,11 @@
             padding-left:50px; 
         }
 
-
         .bcardContent2
         {
             width: 50%;
             padding-left: 50px; 
         }
-
 
         .messageStyle .messageOwner
         {
@@ -318,11 +324,9 @@
         }
 
         .tag-button
-        {
-            
-        margin-top: 60px;
-        font-weight: bold;
-
+        { 
+            margin-top: 60px;
+            font-weight: bold;
         }
     
         

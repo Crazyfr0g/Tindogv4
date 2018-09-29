@@ -22,7 +22,7 @@
                     <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
 
                     <h3>Sex</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
+                    <b-form-input id="" size="sm" type="text" placeholder="Sex of dog" v-model="sexofDog"></b-form-input>
                 
                     <b-form-textarea id=""
                         v-model="abouttheDog"
@@ -107,9 +107,7 @@
                     abouttheDog: '',
                     file: null,
                     feeds: [],
-
                 }
-                // console.log(dropdownValue)
               },
     
               created()

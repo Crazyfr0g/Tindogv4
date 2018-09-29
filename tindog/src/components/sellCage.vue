@@ -19,7 +19,7 @@
                 </div>
             
                 <div class="bcardContent2">  
-                    <p>Product:<i>{{ feed.productype }}</i></p>
+                    <p>Product:<i> {{ feed.productype }}</i></p>
                     <p>Name of Product: {{ feed.productname }} </p>
                     <p>Colors Avaible: {{ feed.productcolor }}</p>
                     <p>Size Available: {{ feed.productsize }} </p>
@@ -34,7 +34,6 @@
         </b-card>  
 
         <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
-            <p>Seller ID: </p>
             <div class="d-block text-center">
                 <b-form-textarea id=""
                     v-model="messageContent"
@@ -54,20 +53,17 @@
         <b-modal ref="addNewfeeds" title="Post Accessories"  hide-footer>
                 <div class="d-block text-center">
 
-                    <h3>Type of Product:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="typeofProduct"></b-form-input>
+                    <h3>Name of Product</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="nameofProduct"></b-form-input>
 
-                    <h3>Name of Product:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofProduct"></b-form-input>
-
-                    <h3>Colors Available:</h3>
+                    <h3>Colors Available</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Enter colors avaible" v-model="availcolorofProduct"></b-form-input>
 
                     <h3>Size Avaible:</h3>
                     <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="availsizeofProduct"></b-form-input>
 
-                    <h3>Price:</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="priceofProduct"></b-form-input>
+                    <h3>Price</h3>
+                    <b-form-input id="" size="sm" type="text" placeholder="Price" v-model="priceofProduct"></b-form-input>
 
                     <b-form-textarea id=""
                         v-model="specificationProduct"
@@ -158,7 +154,6 @@ export default
         {
             let productType = "Cage"
             let sellername = this.displayName
-            // let productType = this.typeofProduct
             let productName = this.nameofProduct
             let productColor = this.availcolorofProduct
             let productSize = this.availsizeofProduct

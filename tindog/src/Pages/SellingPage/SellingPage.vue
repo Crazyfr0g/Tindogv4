@@ -13,19 +13,22 @@
                 <div class="d-block text-center">
                 
                     <h3>Name of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
-        
+                    <b-form-input  size="sm" type="text" placeholder="Enter name of dog" v-model="nameofDog"></b-form-input>
+                    
+                    <h3>Type of breed</h3>
+                    <b-form-select v-model="typeofBreed" :options="typeBreed" class="mb-3" text="aw"></b-form-select>
+
                     <h3>Breed of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter breed of dog" v-model="breedofDog"></b-form-input>
+                    <b-form-select v-model="breedofDog" :options="breedDog" class="mb-3"></b-form-select>
 
                     <h3>Age of dog</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
+                    <b-form-input size="sm" type="text" placeholder="Enter age of dog" v-model="ageofDog"></b-form-input>
 
                     <h3>Sex</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="sexofDog"></b-form-input>
+                    <b-form-select v-model="sexofDog" :options="sexDog" class="mb-3"> </b-form-select>
 
                     <h3>Price</h3>
-                    <b-form-input id="" size="sm" type="text" placeholder="" v-model="priceofDog"></b-form-input>
+                    <b-form-input  size="sm" type="text" placeholder="Price" v-model="priceofDog"></b-form-input>
 
                     <b-form-textarea id=""
                         v-model="abouttheDog"
@@ -116,8 +119,7 @@ import Navbar from '../../components/NavBar.vue'
         data () 
         {
         return {
-            file: null,
-            image: null,
+         
             feeds: [],
             abouttheDog:'',
             nameofDog:'',
@@ -128,7 +130,84 @@ import Navbar from '../../components/NavBar.vue'
             text:'',
             text:'',
             displayName:'',
-            messageContent: ''
+            messageContent: '',
+            typeBreed: '',
+            breedDog: '',
+            sexDog: '',
+            file: null,
+            image: null,
+            typeofBreed: '',
+            breedofDog: '',
+            sexofDog: '',
+
+            typeBreed:[
+                { value: 'Pure breed', text: 'Pure breed' },
+                { value: 'Half breed', text: 'Half breed' },
+                { value: 'Mix breed', text: 'Mix breed' },
+                ],
+
+            breedDog: [
+                { value: 'American Bulldog', text: 'American Bulldog' },
+                { value: 'Alaskan Klee Kai', text: 'Alaskan Klee Kai' },
+                { value: 'American Eskimo', text: 'American Eskimo' },
+                { value: 'Basset Hound', text: 'Basset Hound' },
+                { value: 'Beagle', text: 'Beagle' },
+                { value: 'Beard Collie', text: 'Beard Collie' },
+                { value: 'Bloodhound', text: 'Bloodhound' },
+                { value: 'Boxer', text: 'Boxer' },
+                { value: 'Brittany', text: 'Brittany' },
+                { value: 'Bulldog', text: 'Bulldog' },
+                { value: 'Bullmastiff', text: 'Bullmastiff' },
+                { value: 'Husky', text: 'Husky' },
+                { value: 'Cesky Terrier', text: 'Cesky Terrier' },
+                { value: 'Chihuahua', text: 'Chihuahua' },
+                { value: 'Chinese Created', text: 'Chinese Created' },
+                { value: 'Chow chow', text: 'Chow chow' },
+                { value: 'Collie', text: 'Collie' },
+                { value: 'Coton de Tuclear', text: 'Coton de Tuclear' },
+                { value: 'Dachshund', text: 'Dachshund' },
+                { value: 'Dalmatian', text: 'Dalmatian' },
+                { value: 'Doberman Pinscher', text: 'Doberman Pinsche' },
+                { value: 'English Cocker Spaniel', text: 'English Cocker Spaniel' },
+                { value: 'English Foxhound', text: 'English Foxhound' },
+                { value: 'Field Spaniel', text: 'Field Spaniel' },
+                { value: 'Finnish Lapphund', text: 'Finnish Lapphund' },
+                { value: 'Finnish Spitz', text: 'Finnish Spitz' },
+                { value: 'German Pinscher', text: 'German Pinscher' },
+                { value: 'German Shepered Dog', text: 'German Shepered Dog' },
+                { value: 'German Shorthaired Pointer', text: 'German Shorthaired Pointer' },
+                { value: 'Goldador', text: 'Goldador' },
+                { value: 'Golden Retriever', text: 'Golden Retriever' },
+                { value: 'Goldendoodle', text: 'Goldendoodle' },
+                { value: 'Great Dane', text: 'Great Dane' },
+                { value: 'Greater Swiss Moutain Dog', text: 'Greater Swiss Moutain Dog' },
+                { value: 'Greyhound', text: 'Greyhound' },
+                { value: 'Japanese Spitz', text: 'Japanese Spitz' },
+                { value: 'Labradoodle', text: 'Labradoodle' },
+                { value: 'Labrador Retriever', text: 'Labrador Retriever' },
+                { value: 'Maltese', text: 'Maltese' },
+                { value: 'Maltese Shih Tzu', text: 'Maltese Shih Tzu' },
+                { value: 'Mastiff', text: 'Mastiff' },  
+                { value: 'Miniature Pinscher', text: 'Miniature Pinscher' },
+                { value: 'Mutt', text: 'Mutt' },
+                { value: 'Old English Sheepdog', text: 'Old English Sheepdog' },
+                { value: 'Papillon', text: 'Papillon' },
+                { value: 'Pomeranian', text: 'Pomeranian' },
+                { value: 'Pomsky', text: 'Pomsky' },
+                { value: 'Poodle', text: 'Poodle' },
+                { value: 'Pug', text: 'Pug' },
+                { value: 'Puggle', text: 'Puggle' },
+                { value: 'Saint Bernard', text: 'Saint Bernard' },
+                { value: 'Shih Tzu', text: 'Shih Tzu' },
+                { value: 'Siberian Husky', text: 'Siberian Husky' },
+                { value: 'Yorkipoo', text: 'Yorkipoo' },
+                { value: 'Yorkshire Terrier', text: 'Yorkshire Terrie' },
+            ],
+
+            sexDog: [
+                { value: 'Male', text: 'Male' },
+                { value: 'Female', text: 'Female' },
+            ],
             }
         },
 
@@ -174,6 +253,7 @@ import Navbar from '../../components/NavBar.vue'
                     let name = this.displayName
                     let dogOwner = this.displayName
                     let dogName = this.nameofDog
+                    let dogBreedtype = this.typeofBreed
                     let dogBreed = this.breedofDog
                     let dogAge = this.ageofDog
                     let dogSex = this.sexofDog
@@ -187,6 +267,7 @@ import Navbar from '../../components/NavBar.vue'
                                 Dogowner: dogOwner,
                                 Nameofdog: dogName,
                                 Breedofdog: dogBreed,
+                                Breedtypeofdog: dogBreedtype,
                                 Ageofdog: dogAge,
                                 Sexofdog: dogSex,
                                 Doginformation:dogInformation,
@@ -200,6 +281,7 @@ import Navbar from '../../components/NavBar.vue'
                                 Dogowner: dogOwner,
                                 Nameofdog: dogName,
                                 Breedofdog: dogBreed,
+                                Breedtypeofdog: dogBreedtype,
                                 Ageofdog: dogAge,
                                 Sexofdog: dogSex,
                                 Doginformation:dogInformation,
@@ -228,6 +310,7 @@ import Navbar from '../../components/NavBar.vue'
                             let valNameofOwner = childSnap.val().Dogowner
                             let valNameofDog = childSnap.val().Nameofdog
                             let valBreedofDog = childSnap.val().Breedofdog
+                            let valBreedtypeofDog = childSnap.val().Breedtypeofdog
                             let valAgeofDog = childSnap.val().Ageofdog
                             let valSexofDog = childSnap.val().Sexofdog
                             let valPriceofDog = childSnap.val().Priceofdog
@@ -242,6 +325,7 @@ import Navbar from '../../components/NavBar.vue'
                                     nameofowner: valNameofOwner,
                                     nameofdog: valNameofDog,
                                     breedofdog: valBreedofDog,
+                                    breedtypeofdog: valBreedtypeofDog,
                                     ageofdog: valAgeofDog,
                                     sexofdog: valSexofDog,
                                     priceofdog: valPriceofDog,

@@ -10,11 +10,6 @@ export default {
 }
 </script>
 
-  ready()
-  {
-    this.
-  }
-
 <style>
   
   .paddingTop
@@ -24,7 +19,7 @@ export default {
 
   #HomeLogin
   {
-    font-family: 'Century Gothic';
+    font-family: 'Segoe UI';
   }
 
   #Home #PicStyle #Pic

@@ -18,7 +18,7 @@
                     </div>
                 
                     <div class="bcardContent2">  
-                        <p>Product: {{ feed.productype }} </p> 
+                        <p>Product: <i>{{ feed.productype }}</i></p> 
                         <p>Name of Product: {{ feed.productname }} </p>
                         <p>Specific for: {{ feed.productspecificfor }} </p>
                         <p>Colors Avaible: {{ feed.productcolor }}</p>
@@ -33,7 +33,6 @@
             </b-card>
 
             <b-modal ref="messageSend" title="Message Owner" no-close-on-backdrop  hide-footer>
-                <p>Seller ID: </p>
                 <div class="d-block text-center">
                     <b-form-textarea id=""
                         v-model="messageContent"
@@ -52,32 +51,29 @@
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News">
                     <div class="d-block text-center">
+                        
+                        <h3>Name of Product</h3>
+                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="nameofProduct"></b-form-input>
+
+                        <h3>Specific for</h3>
+                        <b-form-select v-model="specificofClothes" :options="specificClothes" class="mb-3"></b-form-select>
     
-                        <h3>Product:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of product" v-model="typeofProduct"></b-form-input>
-    
-                        <h3>Name of Product:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Enter name of dog" v-model="nameofProduct"></b-form-input>
-            
-                        <h3>Specific for:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Product is specific for" v-model="productSpecificfor"></b-form-input>
-    
-                        <h3>Colors Available:</h3>
+                        <h3>Colors Available</h3>
                         <b-form-input id="" size="sm" type="text" placeholder="Enter colors avaible" v-model="colorsofProduct"></b-form-input>
     
-                        <h3>Size Avaible:</h3>
+                        <h3>Size Avaible</h3>
                         <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="availsizeofProduct"></b-form-input>
 
-                        <h3>Customizable:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="customizableProduct"></b-form-input>
+                        <h3>Customizable</h3>
+                        <b-form-select v-model="customofClothes" :options="customClothes" class="mb-3"></b-form-select>
     
-                        <h3>Type of clothes:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="typeofclothesProduct"></b-form-input>
+                        <h3>Type of clothes</h3>
+                        <b-form-select v-model="typeofClothes" :options="typeClothes" class="mb-3"></b-form-select>
                         
-                        <h3>Product price:</h3>
-                        <b-form-input id="" size="sm" type="text" placeholder="Sizes avaible" v-model="priceofProduct"></b-form-input>
+                        <h3>Price</h3>
+                        <b-form-input id="" size="sm" type="text" placeholder="Price" v-model="priceofProduct"></b-form-input>
         
-                        <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.."></b-form-file>
+                        <b-form-file v-model="image" :state="Boolean(file)" placeholder="Upload a photo.." class="formStyle"></b-form-file>
         
                         <div class="textarea-button">
                             <b-button class="d-inline" variant="outline-success" @click="postFeed">Post</b-button>
@@ -101,8 +97,10 @@
             productSpecificfor: '',
             colorsofProduct: '',
             availsizeofProduct: '',
-            customizableProduct: '',
-            typeofclothesProduct:'',
+            customClothes: '',
+            customofClothes: '',
+            typeofClothes:'',
+            typeClothes: '',
             priceofProduct: '',
             cancelPost:'',  
             text:'',
@@ -111,6 +109,27 @@
             image: null,
             feeds: [],
             data:[],
+
+            customClothes: [
+                { value: 'Yes', text: 'Yes' },
+                { value: 'No', text: 'No' },
+                ],
+
+            typeClothes: [
+                { value: 'Cap', text: 'Cap' },
+                { value: 'Shirt', text: 'Shirt' },
+                { value: 'Short', text: 'Short' },
+                { value: 'Shoes', text: 'Shoes' },
+                { value: 'Hoody', text: 'Hoody' },
+                ],
+
+                
+            specificClothes: [
+            { value: 'Male', text: 'Male' },
+            { value: 'Female', text: 'Female' },
+            { value: 'Unisex', text: 'Unisex' },
+            ],
+
             }
         },
 
@@ -155,14 +174,14 @@
 
             postFeed()
             {
+                let productType = "Clothes"
                 let sellername = this.displayName
-                let productType = this.typeofProduct
                 let productName = this.nameofProduct
                 let productSpecific = this.productSpecificfor
                 let productColor = this.colorsofProduct
                 let productSize = this.availsizeofProduct
-                let productCustom = this.customizableProduct
-                let productclothesType = this.typeofclothesProduct
+                let productCustom = this.customofClothes
+                let productclothesType = this.typeofClothes
                 let productPrice = this.priceofProduct
                 let imageUpload = this.image
                 let uid = firebase.auth().currentUser.uid
@@ -326,8 +345,13 @@
     
         .clothes-button
         {
-        margin-top: 105px;
-        font-weight: bold;
+            margin-top: 105px;
+            font-weight: bold;
+        }
+
+        .formStyle
+        {
+            margin-top: 10px;
         }
         
 </style>
