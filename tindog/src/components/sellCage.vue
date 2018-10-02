@@ -139,7 +139,7 @@ export default
             let valmessage = this.messageContent  
             this.senderuid = firebase.auth().currentUser.uid
 
-            firebase.database().ref(`Users/${this.uid}/Messages`).push({
+            firebase.database().ref(`Users/${this.uid}/RecieveMessages`).push({
                         Sender: this.displayName,
                         Message: valmessage,
                         DateandTime: this.date,
@@ -147,7 +147,17 @@ export default
                     }).then(post => {
                         this.$refs.messageSend.hide()
                         this.messageContent = ''
-                    })                    
+                    })      
+
+            firebase.database().ref(`Users/${this.senderuid}/Messages/SentMessages`).push({
+                        Sender: this.displayName,
+                        Message: valmessage,
+                        DateandTime: this.date,
+                        Senderuid: this.senderuid
+                    }).then(post => {
+                        this.$refs.messageSend.hide()
+                        this.messageContent = ''
+                    })                 
         },
 
         postFeed()
