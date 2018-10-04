@@ -14,7 +14,7 @@
                         </b-media> 
                         
                         <div class="food-button">
-                            <p>Price: {{ feed.productsize }} </p>
+                            <p>Price: {{ feed.productprice }} </p>
                         </div>
                     </div>
                 
@@ -178,8 +178,11 @@
                         date
                 }).then(data => {
                     let key = data.key
-                    firebase.storage().ref(`Images/Accessoriesfeed/Foods/${key}`).put(imageUpload)
-                    firebase.database().ref(`Accessories/Foods/${key}`).set({ 
+                    var storageRef = firebase.storage().ref(`Images/Accessoriesfeed/Foods/${key}`)
+                    storageRef.put(imageUpload).then(function(url){
+                        storageRef.getDownloadURL().then(function(url){
+                        firebase.database().ref(`Accessories/Foods/${key}`).set({ 
+                        image: url,
                         Sellername: sellername,
                         Typeofproduct: productType,
                         Productname: productName,
@@ -189,14 +192,19 @@
                         ProductContains: productContains,
                         uid,
                         date
-                    }).then(post => {
+                        })
+                    })
+                }).then(post => {
                         this.text = ''
                         this.image = ''
-                        this.$refs.addNewfeeds.hide()
-                    })
+                        this.$refs.addNewfeeds.hide()         
                 })
+            })
 
-            },
+        },
+
+            // firebase.storage().ref(`Images/Accessoriesfeed/Foods/${key}`).put(imageUpload)
+            //         firebase.database().ref(`Accessories/Foods/${key}`).set({ 
 
             liveAddingPost()
             {
@@ -214,11 +222,10 @@
                         let valProductcontains = childSnap.val().ProductContains
                         let valDate = childSnap.val().date
                         let valId = childSnap.val().uid
-
-                        let promise = firebase.storage().ref(`Images/Accessoriesfeed/Foods/${childSnap.key}`).getDownloadURL().then(url => {
-                            return { 
+                        let valImage = childSnap.val().image
+                            feedArray.push({
                                 key: childSnap.key,
-                                image: url,
+                                image: valImage,
                                 uid: valId,
                                 date: valDate,
                                 nameofseller: valSellername,
@@ -228,24 +235,11 @@
                                 productprice: valProductprice,
                                 productspecfor: valProductSpecfor,
                                 productcontains: valProductcontains,
-
-                            }
-                        })
-                        promiseArr.push(promise)
-                        // console.log(promiseArr)
+                            })         
                     })
-
-                    Promise.all(promiseArr).then(values => {
-                        values.sort(function(a, b) {
-                            var dateA = new Date(a.date);
-                            var dateB = new Date(b.date);
-                            return dateA - dateB;
-                        }).reverse()
-                        this.feeds = values
-                    })
-                
+                    this.feeds = feedArray
                 }) 
-            },
+            }
         }
 
     }

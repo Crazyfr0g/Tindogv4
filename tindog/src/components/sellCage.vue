@@ -4,7 +4,7 @@
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
         </div>
 
-        <b-card v-for="(feed, i) in feeds" :key="feed.key" class="bcardStyle" > 
+        <b-card v-for="(feed, i) in feedList" :key="feed.key" class="bcardStyle" > 
             <div class="clearfixMargin">
                 <div class="bcardContent1"> 
                     <b-media> 
@@ -119,6 +119,15 @@ export default
         this.liveAddingPost()
     },
 
+    computed:
+    {
+        feedList()
+        {
+            console.log(this.feeds)
+            return this.feeds.reverse()       
+        }
+    },
+
     methods:
     {
         addfeed()
@@ -129,7 +138,6 @@ export default
         clickMessage(uid)
         {      
             this.uid = uid
-            console.log(uid)
             this.$refs.messageSend.show() 
             
         },
@@ -173,7 +181,7 @@ export default
             let uid = firebase.auth().currentUser.uid
             let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
 
-            let newPostkey = firebase.database().ref(`Users/${uid}/AccessoriesPost/Cages`).push({
+            firebase.database().ref(`Users/${uid}/AccessoriesPost/Cages`).push({
                     Sellername: sellername,
                     Typeofproduct: productType,
                     Productname: productName,
@@ -185,28 +193,32 @@ export default
                     date
             }).then(data => {
                 let key = data.key
-                firebase.storage().ref(`Images/Accessoriesfeed/Cages/${key}`).put(imageUpload)
-                firebase.database().ref(`Accessories/Cages/${key}`).set({ 
-                    Sellername: sellername,
-                    Typeofproduct: productType,
-                    Productname: productName,
-                    Productcolor: productColor,
-                    Productsize: productSize,
-                    Productprice: productPrice,
-                    Productspecification: productSpecification,
-                    uid,
-                    date
+                var storageRef = firebase.storage().ref(`Images/Accessoriesfeed/Cages/${key}`)
+                    storageRef.put(imageUpload).then(function(url){
+                        storageRef.getDownloadURL().then(function(url){
+                        firebase.database().ref(`Accessories/Cages/${key}`).set({ 
+                        image: url,
+                        Sellername: sellername,
+                        Typeofproduct: productType,
+                        Productname: productName,
+                        Productcolor: productColor,
+                        Productsize: productSize,
+                        Productprice: productPrice,
+                        Productspecification: productSpecification,
+                        uid,
+                        date
+                        })
+                    })
                 }).then(post => {
-                    this.text = ''
-                    this.image = ''
-                    this.$refs.addNewfeeds.hide()
+                        this.text = ''
+                        this.image = ''
+                        this.$refs.addNewfeeds.hide()         
                 })
+                
             })
 
-            },
-    
-
-
+        },
+            
         liveAddingPost()
         {
             firebase.database().ref('Accessories/Cages').on('value',snap => {
@@ -222,11 +234,9 @@ export default
                     let valProductSpec = childSnap.val().Productspecification
                     let valDate = childSnap.val().date
                     let valId = childSnap.val().uid
-
-                    let promise = firebase.storage().ref(`Images/Accessoriesfeed/Cages/${childSnap.key}`).getDownloadURL().then(url => {
-                        return { 
-                            key: childSnap.key,
-                            image: url,
+                    let valImage = childSnap.val().image
+                        feedArray.push({
+                            image: valImage,
                             uid: valId,
                             date: valDate,
                             nameofseller: valSellername,
@@ -236,23 +246,11 @@ export default
                             productsize: valProductsize,
                             productprice: valProductprice,
                             productspec: valProductSpec
-
-                        }
-                    })
-                    promiseArr.push(promise)
+                        })
                 })
-
-                Promise.all(promiseArr).then(values => {
-                    values.sort(function(a, b) {
-                        var dateA = new Date(a.date);
-                        var dateB = new Date(b.date);
-                        return dateA - dateB;
-                    }).reverse()
-                    this.feeds = values
-                })
-                
+                this.feeds = feedArray
             }) 
-        },
+        }
     }  
 }
    
@@ -261,84 +259,84 @@ export default
 
 <style>
      
-        .bcardStyle
-        {
-            width: 75%;
-            margin: 0 auto;
-            margin-bottom: 20px;
-           
-        }
+    .bcardStyle
+    {
+        width: 75%;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        
+    }
 
-        .clearfixMargin
-        {
-            display: flex;
-        }
+    .clearfixMargin
+    {
+        display: flex;
+    }
 
-        .bcardContent1
-        {
-            width: 50%;
+    .bcardContent1
+    {
+        width: 50%;
 
-        }
+    }
 
-        .bcardContent1 .imageStyles
-        {
-            padding-left:50px; 
-        }
-
-
-        .bcardContent2
-        {
-            width: 50%;
-            padding-left: 50px; 
-        }
+    .bcardContent1 .imageStyles
+    {
+        padding-left:50px; 
+    }
 
 
-        .messageStyle .messageOwner
-        {
-            width: 480px;
-            margin: 0 auto;
-        }
+    .bcardContent2
+    {
+        width: 50%;
+        padding-left: 50px; 
+    }
 
-        .bcardContent2 p
-        {
-            font-weight: bold;
-        }
-    
-        .fixedIcon i:hover
-        {
-            transform: translate(0px, -2px);
-        }
 
-        .fixedIcon i
-        {
-            transition: all 300ms ease-in-out;
-        }
+    .messageStyle .messageOwner
+    {
+        width: 480px;
+        margin: 0 auto;
+    }
 
-        .fixedIcon
-        {
-            position: fixed;
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 99;
-        }
+    .bcardContent2 p
+    {
+        font-weight: bold;
+    }
 
-        .cage-button
-        {
-            margin-top: 50px;
-            font-weight: bold;
-        }
+    .fixedIcon i:hover
+    {
+        transform: translate(0px, -2px);
+    }
 
-        .textareaDesign
-        {
-            margin-top: 10px;
-        }
+    .fixedIcon i
+    {
+        transition: all 300ms ease-in-out;
+    }
 
-        .imageStyles
-        {
-            height: 200px;
-            width: 350px;
-            margin-top: 30px;
-        }
+    .fixedIcon
+    {
+        position: fixed;
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 99;
+    }
+
+    .cage-button
+    {
+        margin-top: 50px;
+        font-weight: bold;
+    }
+
+    .textareaDesign
+    {
+        margin-top: 10px;
+    }
+
+    .imageStyles
+    {
+        height: 200px;
+        width: 350px;
+        margin-top: 30px;
+    }
       
 </style>

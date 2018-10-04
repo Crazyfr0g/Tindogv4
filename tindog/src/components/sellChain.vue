@@ -190,22 +190,27 @@
                         date
                 }).then(data => {
                     let key = data.key
-                    firebase.storage().ref(`Images/Accessoriesfeed/Chain/${key}`).put(imageUpload)
-                    firebase.database().ref(`Accessories/Chain/${key}`).set({ 
-                        Sellername: sellername,
-                        Typeofproduct: productType,
-                        Productname: productName,
-                        Productchaintype: productchainType,
-                        Productcolor: productColor,
-                        Productsize: productSize,
-                        ProductCustom: productCustom,
-                        Productprice: productPrice,
-                        uid,
-                        date
+                    var storageRef = firebase.storage().ref(`Images/Accessoriesfeed/Chain/${key}`)
+                        storageRef.put(imageUpload).then(function(url){
+                            storageRef.getDownloadURL().then(function(url){
+                            firebase.database().ref(`Accessories/Chain/${key}`).set({ 
+                                image: url,
+                                Sellername: sellername,
+                                Typeofproduct: productType,
+                                Productname: productName,
+                                Productchaintype: productchainType,
+                                Productcolor: productColor,
+                                Productsize: productSize,
+                                ProductCustom: productCustom,
+                                Productprice: productPrice,
+                                uid,
+                                date
+                                })
+                                })
                     }).then(post => {
-                        this.text = ''
-                        this.image = ''
-                        this.$refs.addNewfeeds.hide()
+                            this.text = ''
+                            this.image = ''
+                            this.$refs.addNewfeeds.hide()         
                     })
                 })
 
@@ -228,11 +233,10 @@
                         let valProductprice = childSnap.val().Productprice
                         let valDate = childSnap.val().date
                         let valId = childSnap.val().uid
-
-                        let promise = firebase.storage().ref(`Images/Accessoriesfeed/Chain/${childSnap.key}`).getDownloadURL().then(url => {
-                            return { 
+                        let valImage = childSnap.val().image
+                            feedArray.push({
                                 key: childSnap.key,
-                                image: url,
+                                image: valImage,
                                 uid: valId,
                                 date: valDate,
                                 nameofseller: valSellername,
@@ -242,23 +246,11 @@
                                 productsize: valProductsize,
                                 productcustom: valProductCustom,
                                 productprice: valProductprice,
-                            }
-                        })
-                        promiseArr.push(promise)
-                        // console.log(promiseArr)
-                    })
-
-                    Promise.all(promiseArr).then(values => {
-                        values.sort(function(a, b) {
-                            var dateA = new Date(a.date);
-                            var dateB = new Date(b.date);
-                            return dateA - dateB;
-                        }).reverse()
-                        this.feeds = values
-                    })
-                
+                            })
+                     })
+                     this.feeds = feedArray
                 }) 
-            },
+            }
         }
     }
     

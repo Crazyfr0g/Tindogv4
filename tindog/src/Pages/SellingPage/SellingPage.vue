@@ -2,12 +2,14 @@
         <div id="Style" class="paddingTop">
             <navbar/>
             <div class="textarea">
-                <p class="titlePage">Dogs</p>
+                <p class="titlePage">Dogs for Sale</p>
             </div> 
 
             <div class="fixedIcon">
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
             </div>
+
+            <b-form-input type="text" placeholder="Search breed of dog ..." v-model="searchDog" class="search"></b-form-input>
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News" no-close-on-backdrop>
                 <div class="d-block text-center">
@@ -47,7 +49,7 @@
                 </div>
             </b-modal>
 
-            <b-card v-for="(feed, i) in feeds" :key="feed.key" class="bcardStyle"> 
+            <b-card v-for="(feed, i) in feedList" :key="feed.key" class="bcardStyle"> 
                 <div class="clearfixMargin">
 
                     <div class="bcardContent1"> 
@@ -139,6 +141,7 @@ import Navbar from '../../components/NavBar.vue'
             typeofBreed: '',
             breedofDog: '',
             sexofDog: '',
+            searchDog: '',
 
             typeBreed:[
                 { value: 'Pure breed', text: 'Pure breed' },
@@ -218,6 +221,16 @@ import Navbar from '../../components/NavBar.vue'
             this.liveAddingPost()
         },
 
+        computed:
+        {
+            feedList:function()
+            {
+                return this.feeds.filter((feed) => {
+                    return feed.breedofdog.match(this.searchDog);
+                }).reverse()
+            }
+        },
+
         methods:
         {
             clickMessage(uid)
@@ -273,7 +286,7 @@ import Navbar from '../../components/NavBar.vue'
                     let imageUpload = this.image
                     let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
                     
-                    let newPostkey = firebase.database().ref(`Users/${uid}/NewsDogPost`).push({
+                    firebase.database().ref(`Users/${uid}/NewsDogPost`).push({
                                 Dogowner: dogOwner,
                                 Nameofdog: dogName,
                                 Breedofdog: dogBreed,
@@ -286,18 +299,23 @@ import Navbar from '../../components/NavBar.vue'
                                 uid
                         }).then(data => {
                             let key = data.key
-                            firebase.storage().ref(`Images/Sellingfeed/${key}`).put(imageUpload)
-                            firebase.database().ref(`DogsforSale/${key}`).set({ 
-                                Dogowner: dogOwner,
-                                Nameofdog: dogName,
-                                Breedofdog: dogBreed,
-                                Breedtypeofdog: dogBreedtype,
-                                Ageofdog: dogAge,
-                                Sexofdog: dogSex,
-                                Doginformation:dogInformation,
-                                Priceofdog: dogPrice,
-                                date,
-                                uid
+                            var storageRef = firebase.storage().ref(`Images/Sellingfeed/${key}`)
+                                storageRef.put(imageUpload).then(function(url){
+                                    storageRef.getDownloadURL().then(function(url){
+                                        firebase.database().ref(`DogsforSale/${key}`).set({ 
+                                        image: url,
+                                        Dogowner: dogOwner,
+                                        Nameofdog: dogName,
+                                        Breedofdog: dogBreed,
+                                        Breedtypeofdog: dogBreedtype,
+                                        Ageofdog: dogAge,
+                                        Sexofdog: dogSex,
+                                        Doginformation:dogInformation,
+                                        Priceofdog: dogPrice,
+                                        date,
+                                        uid
+                                        })
+                                    }) 
                             }).then(post => {
                                 this.text = ''
                                 this.image = ''
@@ -313,50 +331,35 @@ import Navbar from '../../components/NavBar.vue'
                 firebase.database().ref('DogsforSale').on('value',snap => {
                     let feedArray = []
                     let promiseArr = []
-
-                        snap.forEach(childSnap => {
-                            let valContent = childSnap.val().Doginformation
-                            let valDate = childSnap.val().date
-                            let valNameofOwner = childSnap.val().Dogowner
-                            let valNameofDog = childSnap.val().Nameofdog
-                            let valBreedofDog = childSnap.val().Breedofdog
-                            let valBreedtypeofDog = childSnap.val().Breedtypeofdog
-                            let valAgeofDog = childSnap.val().Ageofdog
-                            let valSexofDog = childSnap.val().Sexofdog
-                            let valPriceofDog = childSnap.val().Priceofdog
-                            let valId = childSnap.val().uid
-
-                            let promise = firebase.storage().ref(`Images/Sellingfeed/${childSnap.key}`).getDownloadURL().then(url => {
-                                return { 
-                                    key: childSnap.key,
-                                    content: valContent,
-                                    image: url,
-                                    date: valDate,
-                                    nameofowner: valNameofOwner,
-                                    nameofdog: valNameofDog,
-                                    breedofdog: valBreedofDog,
-                                    breedtypeofdog: valBreedtypeofDog,
-                                    ageofdog: valAgeofDog,
-                                    sexofdog: valSexofDog,
-                                    priceofdog: valPriceofDog,
-                                    uid: valId
-                                }
-                            })
-                            promiseArr.push(promise)
+                    snap.forEach(childSnap => {
+                        let valContent = childSnap.val().Doginformation
+                        let valDate = childSnap.val().date
+                        let valNameofOwner = childSnap.val().Dogowner
+                        let valNameofDog = childSnap.val().Nameofdog
+                        let valBreedofDog = childSnap.val().Breedofdog
+                        let valBreedtypeofDog = childSnap.val().Breedtypeofdog
+                        let valAgeofDog = childSnap.val().Ageofdog
+                        let valSexofDog = childSnap.val().Sexofdog
+                        let valPriceofDog = childSnap.val().Priceofdog
+                        let valId = childSnap.val().uid
+                        let valImage = childSnap.val().image
+                        feedArray.push({
+                            image: valImage,
+                            content: valContent,
+                            date: valDate,
+                            nameofowner: valNameofOwner,
+                            nameofdog: valNameofDog,
+                            breedofdog: valBreedofDog,
+                            breedtypeofdog: valBreedtypeofDog,
+                            ageofdog: valAgeofDog,
+                            sexofdog: valSexofDog,
+                            priceofdog: valPriceofDog,
+                            uid: valId
                         })
-
-                        Promise.all(promiseArr).then(values => {
-                            values.sort(function(a, b) {
-                                var dateA = new Date(a.date);
-                                var dateB = new Date(b.date);
-                                return dateA - dateB;
-                            }).reverse()
-                            this.feeds = values
-                    })
-                    
+                    }) 
+                    this.feeds = feedArray  
                 }) 
             },
-
             cancelPost()
                 {
                     this.$refs.addNewfeeds.hide()
@@ -467,24 +470,12 @@ import Navbar from '../../components/NavBar.vue'
             bottom: 20px;
             z-index: 99;
         }
-    
-        /* .textarea
+
+        .search
         {
             width: 75%;
             margin: 0 auto;
-            margin-top: 40px;
-            margin-bottom: 30px;
-        } */
-    
-        /* .textareaDesign
-        {
             margin-bottom: 10px;
-        } */
-
-        /* .textarea-button
-        {
-            margin-top: 15px;
-        } */
-    
+        }
     </style>
     

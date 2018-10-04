@@ -47,7 +47,7 @@
 
         <b-card class="text-center">    
             <p class="text-dark style">
-                Welcome to Tindog the dog selling App 
+                Welcome to Tindog the Dog Selling / Dog Studding Finder App 
             </p>
         </b-card><br><br>
 
@@ -167,7 +167,6 @@ import firebase from 'firebase'
             {
                 let logEmail = this.signinEmail
                 let logPass = this.signinPassword
-
                 
                 firebase.auth().signInWithEmailAndPassword(logEmail, logPass)
                 .then((user) => {

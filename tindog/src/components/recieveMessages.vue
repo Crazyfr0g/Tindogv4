@@ -87,7 +87,6 @@
             {
                 feedList()
                 {
-                    console.log(this.feeds)
                     return this.feeds.reverse()       
                 }
             },

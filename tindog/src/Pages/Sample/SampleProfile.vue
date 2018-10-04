@@ -4,15 +4,22 @@
             <div class="textarea">
                 <p class="titlePage">Profile</p>
             </div>
+
             <div class="ImageStyle">  
                 <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
-                <p class="profile">{{ displayName }} &#x1F58B;</p>
+                <b-button class="d-inline" variant="outline-success" @click="editProfile"><small>Edit</small></b-button>
+                <p class="profile">{{ displayName }} </p>
                 <p class="profile">{{ displayEmail }}</p>
             </div><br>
 
+            <!-- <div class="buttonStyle" v-for='(feed, i) in feeeds' :key="i">
+            <b-button class="d-inline" variant="outline-success" @click="">{{feed.email}</b-button>
+            <b-button class="d-inline" variant="outline-danger" @click="">{{feed.firstnames}}</b-button>
+            </div> -->
+
             <div class="buttonStyle">
-            <b-button class="d-inline" variant="outline-success" @click="RecievedMessages">RecievedMessages</b-button>
-            <b-button class="d-inline" variant="outline-danger" @click="SentMessages">SentMessages</b-button>
+                <b-button class="d-inline" variant="outline-success" @click="RecievedMessages">RecievedMessages</b-button>
+                <b-button class="d-inline" variant="outline-danger" @click="SentMessages">SentMessages</b-button>
             </div>
 
             <recieve-Messages v-if="recieveDisplay"/> 
@@ -48,22 +55,42 @@
                 </div>
             </b-modal>
 
-            <b-card class="bcardWidth">
+            <b-card class="bcardWidth" fluid v-b-scrollspy:scroll style="position:relative; height:500px; overflow-y:scroll;">
                     <p class="messageCenter"><i>Previous Feed</i></p>
                         <hr width="250"/>
-                    <div class="editIconArea">
+                    <div v-for="(feed, i) in feedList" :key="feed.key" class="editIconArea">
                         <ul class="list-unstyled">
                             <b-media tag="li"class="my-4">
                                 <b-img slot="aside" blank blank-color="#abc" width="64" alt="placeholder" />
-                                    <h5 class="mt-0 mb-1">List-based media object</h5>
-                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque
-                                    ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus
-                                    viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec
-                                    lacinia congue felis in faucibus.
+                                    <h5 class="mt-0 mb-1">{{ feed.name }} </h5>   <small>{{ feed.date }}</small>
+                                    <h4> {{ feed.message }} </h4>
                             </b-media>
                         </ul>      
                     </div>
             </b-card> 
+
+            
+            <b-modal ref="editProfile" title="Edit Profile" no-close-on-backdrop  hide-footer>
+                <div class="d-block text-center">
+                    <b-alert show variant="success">
+                    <a href="#" class="alert-link">Profile</a>
+                    </b-alert>
+                    <p class="messageCenter"><i>Firstname:</i></p>
+                    <b-form-input type="text" placeholder="First name" v-model="editFirstname"></b-form-input>
+
+                    <p class="messageCenter"><i>Lastname:</i></p>
+                    <b-form-input type="text" placeholder="Last name" v-model="editLastname"></b-form-input>
+
+                    <p class="messageCenter"><i>Email:</i></p>
+                    <b-form-input type="text" placeholder="Email" v-model="editEmail"></b-form-input>
+
+                    <div  class="textarea-button">
+                        <b-button class="d-inline" variant="outline-success" @click="proceedEdit">Accept</b-button>
+                        <b-button class="d-inline" variant="outline-danger" @click="abortEdit">Cancel</b-button>
+                    </div>
+                </div>
+            </b-modal>
+            
             
         </div>
     </template>
@@ -89,8 +116,13 @@
                 {
                     return{
                         feeds: [],
+                        feeeds: [],
                         displayEmail: '',
                         displayName: '',
+                        password: '',
+                        editFirstname:'',
+                        editLastname: '',
+                        editEmail: '',
                         currentPage: null,
                         messageContent:'',
                         recieveDisplay: true,
@@ -101,14 +133,15 @@
 
                 created()
                 {
+                    // this.retrieveProfile()
                     this.gettingMessages()
+                    this.gettingPreviousPostFeed()
                 },
 
                 computed:
                 {
                     feedList()
                     {
-                        console.log(this.feeds)
                         return this.feeds.reverse()       
                     }
                 },
@@ -116,6 +149,16 @@
 
                 methods:
                 {
+                    abortEdit()
+                    {
+                        this.$refs.editProfile.hide()
+                    },
+
+                    editProfile()
+                    {
+                        this.$refs.editProfile.show()
+                    },
+
                     RecievedMessages()
                     {
                         this.recieveDisplay = true
@@ -130,7 +173,6 @@
 
                     sendReply(senderuid)
                     {
-                        console.log(senderuid)
                         this.recieve = senderuid
                         this.$refs.messageSend.show() 
                     },
@@ -201,6 +243,73 @@
                                 this.feeds = feedArray 
                         })
                     },
+
+                    gettingPreviousPostFeed()
+                    {
+                        this.uid = firebase.auth().currentUser.uid
+
+                        firebase.database().ref(`Users/${this.uid}/NewsfeedPost`).on('value',snap => {
+                               let feedArray = []
+                               snap.forEach(childSnap => {
+                                   let valContent = childSnap.val().content
+                                   let valfullname = childSnap.val().fullname
+                                   let valDateandTime = childSnap.val().date        
+                                   feedArray.push({ 
+                                       date: valDateandTime,
+                                       message: valContent,
+                                       name: valfullname
+                                   }) 
+                               })
+                                   this.feeds = feedArray 
+                           })
+                    },
+
+                    proceedEdit()
+                    {
+                        this.uid = firebase.auth().currentUser.uid
+
+                        let editedfirstname = this.editFirstname
+                        let editedLastname = this.editLastname
+                        let editedEmail = this.editEmail
+
+                         firebase.database().ref(`Users/${this.uid}`).update({
+                            email: editedEmail,
+                            firstname: editedfirstname,
+                            lastname: editedLastname
+                        }).then(post => {
+                            this.editFirstname = ''
+                            this.editLastname = ''
+                            this.editEmail = ''
+                            this.$refs.editProfile.hide()         
+                        })
+                    },
+
+
+
+
+                                
+                        // retrieveProfile()
+                        // {
+                        //     this.uid = firebase.auth().currentUser.uid
+
+                        //     firebase.database().ref(`Users/${this.uid}`).once('value',snap => {
+                        //             let feedArray = []
+                        //             snap.forEach(childSnap => {
+                        //                 let valEmail = childSnap.val().email
+                        //                 let valFirstname = childSnap.val().firstname
+                        //                 let valLastname = childSnap.val().lastname
+                        //                 feedArray.push({ 
+                        //                     email: valEmail,
+                        //                     firstnames: valFirstname,
+                        //                     lastnames: valLastname,
+                        //                 }) 
+                        //             })
+                        //                 this.feeeds = feedArray 
+                        //                 console.log(feeeds)
+                        //         })
+
+                        // }
+                    
                 }
     
             }

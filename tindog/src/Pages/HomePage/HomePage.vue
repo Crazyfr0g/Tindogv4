@@ -29,7 +29,7 @@
             </b-modal>
            
             <div class="bcardstyle">
-                <b-card class="bmediaStyle" v-for="(feed, i) in feeds" :key="feed.key">
+                <b-card class="bmediaStyle" v-for="(feed, i) in feedList" :key="feed.key">
                     <b-media>
                         <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
                             <h5 class="mt-0">{{ feed.name }}</h5>
@@ -76,9 +76,17 @@
 
         created()
         {
-            this.liveAddingPost()
-            // setTimeout(liveAddingPost,1000)
-           
+            this.liveAddingPost()   
+        },
+        
+
+        computed:
+        {
+            feedList()
+            {
+                console.log(this.feeds)
+                return this.feeds.reverse()       
+            }
         },
 
         methods:{
@@ -97,22 +105,27 @@
                 let imageUpload = this.image
                 let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
                 
-                let newPostkey = firebase.database().ref(`Users/${uid}/NewsfeedPost`).push({
+               firebase.database().ref(`Users/${uid}/NewsfeedPost`).push({
                         content: messageFeed,
                         fullname: name,
                         date
                 }).then(data => {
                     let key = data.key
-                    firebase.storage().ref(`Images/Postfeed/${key}`).put(imageUpload)
-                    firebase.database().ref(`Postfeed/${key}`).set({ 
-                        content: messageFeed,
-                        fullname: name,
-                        email: email,
-                        date
+                    var storageRef = firebase.storage().ref(`Images/Postfeed/${key}`)
+                        storageRef.put(imageUpload).then(function(url){
+                            storageRef.getDownloadURL().then(function(url){
+                            firebase.database().ref(`Postfeed/${key}`).set({ 
+                            image: url,
+                            content: messageFeed,
+                            fullname: name,
+                            email: email,
+                            date
+                            })
+                        })    
                     }).then(post => {
-                        this.text = ''
-                        this.image = null
-                        this.$refs.addNewfeeds.hide()         
+                            this.text = ''
+                            this.image = ''
+                            this.$refs.addNewfeeds.hide()         
                     })
                 })        
                 
@@ -138,27 +151,16 @@
                         let valName = childSnap.val().fullname
                         let valContent = childSnap.val().content
                         let valDate = childSnap.val().date
-                        let promise = firebase.storage().ref(`Images/Postfeed/${childSnap.key}`).getDownloadURL().then(url => {
-                            return { 
-                                key: childSnap.key,
+                        let valImage = childSnap.val().image
+                            feedArray.push({
                                 name: valName,
                                 content: valContent,
-                                image: url,
+                                image: valImage,
                                 date: valDate
-                            }
+                            })
                         })
-                        promiseArr.push(promise)
+                        this.feeds = feedArray
                     })
-
-                    Promise.all(promiseArr).then(values => {
-                        values.sort(function(a, b) {
-                            var dateA = new Date(a.date);
-                            var dateB = new Date(b.date);
-                            return dateA - dateB;                
-                        }).reverse()
-                        this.feeds = values
-                    })  
-                }) 
             }   
         }
         
@@ -183,21 +185,20 @@
     }
 
     .fixedIcon i:hover{
-    transform: translate(0px, -2px);
+        transform: translate(0px, -2px);
     }
 
     .fixedIcon i
     {
-    transition: all 300ms ease-in-out;
+        transition: all 300ms ease-in-out;
     }
 
     .fixedIcon
     {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 99;
-
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 99;
     }
 
     .textarea
@@ -205,14 +206,7 @@
         width: 75%;
         margin: 0 auto;
         margin-top: 40px;
-        margin-bottom: 30px;
-        
-    }
-
-    .titlePage
-    {
-        /* background: linear-gradient(to right, #ffffff, #ece9e6, #ffffff); */
-        /* background-color: # */
+        margin-bottom: 30px; 
     }
 
 
@@ -241,9 +235,6 @@
     .bmediaStyle
     {
         border-radius: 5px;
-        /* background: linear-gradient(to right, #ffffff, #ece9e6, #ffffff); */
-        /* border-color: #b6fbff; */
-        /* background-color: #fff; */
     }
 
     .textareaDesign
@@ -271,7 +262,7 @@
     {
         width: 50%;
         text-align: right;
-        margin-top: 60px;
+        margin-top: 90px;
     
     }
 

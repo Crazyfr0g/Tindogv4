@@ -18,7 +18,7 @@
                     </div>
                 
                     <div class="bcardContent2"> 
-                        <p>Product: {{ feed.productype }} </p> 
+                        <p>Product:  <i> {{ feed.productype }} </i></p> 
                         <p>Name of Product: {{ feed.productname }} </p>
                         <p>Tag type: {{ feed.producttagtype }}</p>
                         <p>Colors Avaible: {{ feed.productcolor }}</p>
@@ -97,7 +97,6 @@
             availsizeofProduct: '',
             customizableProduct: '',
             priceofProduct: '',
-            cancelPost:'',  
             text:'',
             messageContent:'',
             customofTag: '',
@@ -185,7 +184,7 @@
                 let uid = firebase.auth().currentUser.uid
                 let date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila'})
 
-                let newPostkey = firebase.database().ref(`Users/${uid}/AccessoriesPost/Tag`).push({
+               firebase.database().ref(`Users/${uid}/AccessoriesPost/Tag`).push({
                         Sellername: sellername,
                         Typeofproduct: productType,
                         Productname: productName,
@@ -198,31 +197,35 @@
                         date
                 }).then(data => {
                     let key = data.key
-                    firebase.storage().ref(`Images/Accessoriesfeed/Tag/${key}`).put(imageUpload)
-                    firebase.database().ref(`Accessories/Tag/${key}`).set({ 
-                        Sellername: sellername,
-                        Typeofproduct: productType,
-                        Productname: productName,
-                        Producttagtype: producttagType,
-                        Productcolor: productColor,
-                        Productsize: productSize,
-                        ProductCustom: productCustom,
-                        Productprice: productPrice,
-                        uid,
-                        date
+                    var storageRef = firebase.storage().ref(`Images/Accessoriesfeed/Tags/${key}`)
+                        storageRef.put(imageUpload).then(function(url){
+                            storageRef.getDownloadURL().then(function(url){
+                            firebase.database().ref(`Accessories/Tags/${key}`).set({ 
+                            image: url,
+                            Sellername: sellername,
+                            Typeofproduct: productType,
+                            Productname: productName,
+                            Producttagtype: producttagType,
+                            Productcolor: productColor,
+                            Productsize: productSize,
+                            ProductCustom: productCustom,
+                            Productprice: productPrice,
+                            uid,
+                            date
+                            })
+                        })
+
                     }).then(post => {
                         this.text = ''
                         this.image = ''
-                        this.$refs.addNewfeeds.hide()
+                        this.$refs.addNewfeeds.hide()         
                     })
                 })
-
             },
 
             liveAddingPost()
             {
-                    
-                firebase.database().ref('Accessories/Tag').on('value',snap => {
+                firebase.database().ref('Accessories/Tags').on('value',snap => {
                     let feedArray = []
                     let promiseArr = []
                     snap.forEach(childSnap => {
@@ -236,11 +239,9 @@
                         let valProductprice = childSnap.val().Productprice
                         let valDate = childSnap.val().date
                         let valId = childSnap.val().uid
-
-                        let promise = firebase.storage().ref(`Images/Accessoriesfeed/Tag/${childSnap.key}`).getDownloadURL().then(url => {
-                            return { 
-                                key: childSnap.key,
-                                image: url,
+                        let valImage = childSnap.val().image
+                            feedArray.push({
+                                image: valImage,
                                 uid: valId,
                                 date: valDate,
                                 nameofseller: valSellername,
@@ -251,22 +252,11 @@
                                 productsize: valProductsize,
                                 productcustom: valProductCustom,
                                 productprice: valProductprice,
-                            }
-                        })
-                        promiseArr.push(promise)
+                            })
                     })
-
-                    Promise.all(promiseArr).then(values => {
-                        values.sort(function(a, b) {
-                            var dateA = new Date(a.date);
-                            var dateB = new Date(b.date);
-                            return dateA - dateB;
-                        }).reverse()
-                        this.feeds = values
-                    })
-                
+                    this.feeds = feedArray
                 }) 
-            },
+            }
         }
     }
     
