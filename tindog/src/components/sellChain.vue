@@ -25,7 +25,7 @@
                         <p>Customizable: {{ feed.productcustom }} </p>
 
                         <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)" style="width: 480px; margin: 0 auto; background-color: #2b5876;">Message Seller</b-button>
                         </div>    
                     </div>      
                 </div>
@@ -290,11 +290,12 @@
         }
 
 
-        .messageStyle .messageOwner
+        /* .messageStyle .messageOwner
         {
             width: 480px;
             margin: 0 auto;
-        }
+            background: linear-gradient(to right, #2b5876);
+        } */
 
         .bcardContent2 p
         {

@@ -63,21 +63,24 @@
                 <b-card 
                         text-variant="white"
                         header="News feed &#9000;"
-                        class="Deck1">
+                        class="Deck1"
+                        style="background-color: #4b6cb7;">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </b-card>
 
                 <b-card 
                         text-variant="white"
                         header="Selling &#128176;"
-                        class="Deck2">
+                        class="Deck2"
+                        style="background-color: #182848;">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </b-card>
 
                 <b-card 
                         text-variant="white"
                         header="Dog Breeding &#128054;"
-                        class="Deck3">
+                        class="Deck3"
+                        style=" background-color: #2980B9;">
                 <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                 </b-card>
             </b-card-group>
@@ -86,7 +89,12 @@
         <div class="aboutTindog">
             <p class="about">About Tindog</p>
             <p class="content">
-                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus deleniti dolorem vitae, exercitationem cumque esse? Autem doloribus corrupti fuga? Explicabo repudiandae debitis nemo nisi hic     molestias nulla, porro voluptatum vero facere id, accusantium odit quis consectetur pariatur, quo voluptatibus possimus voluptatem non recusandae dolores! Ratione ut illo tempora necessitatibus enim, id inventore maiores, modi quisquam a quidem dolores sed ea. Ea, ullam consectetur cumque earum repellendus officia, harum cupiditate consequuntur quia, deleniti quaerat accusamus itaque facere magni voluptatibus quo! Cupiditate provident illo praesentium neque, odio nobis, dignissimos est aut commodi dolores, incidunt repellendus! Natus doloremque, nobis asperiores cupiditate iusto esse!
+                    Tindog-is a website  where you can find most of your needs
+                    as a dog lovers.in this website you can find partner for your 
+                    favorite dogs without hassle in finding dog stud sellers
+                    you can also post your daily activities with your dog in this
+                    website and also in this website you can buy things you need 
+                   for your dog. a peacefull sanctuary for Dog lovers.
             </p>
         </div>
 
@@ -305,23 +313,23 @@ import firebase from 'firebase'
         text-align: center;
     }
 
-    .Deck1
+    /* .deckClass .Deck1
     {
-        /* background: linear-gradient(to right, #4b6cb7); */
+     
         background-color: #4b6cb7;
     }
 
-   .Deck2
+   .deckClass .Deck2
     {
-        /* background: linear-gradient(to right, #182848); */
+       
         background-color: #182848;
     }
 
-    .Deck3
+    .deckClass .Deck3
     {
-        /* background: linear-gradient(to right, #2980B9); */
+        
         background-color: #2980B9;
-    }
+    } */
 
     .deckClass header
     {

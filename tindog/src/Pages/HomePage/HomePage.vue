@@ -34,13 +34,13 @@
                         <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
                             <h5 class="mt-0">{{ feed.name }}</h5>
                         <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyle"/>   
-                            <pre class="preDesign"> {{ feed.content }} </pre>
+                            <pre class="preDesign"><i class="fa fa-quote-left" aria-hidden="true"></i> {{ feed.content }} <i class="fa fa-quote-right" aria-hidden="true"></i></pre>
                     </b-media>
                          
                     <div class="clearFixMargin">
                         <div class="media-button">
-                                <b-button class="d-inline" variant="outline-success">Like</b-button>
-                                <b-button class="d-inline" variant="outline-danger">Dislike</b-button>
+                            <b-button class="d-inline" variant="outline-success" >Like</b-button>
+                            <b-button class="d-inline" variant="outline-danger" >Dislike</b-button>
                         </div>
 
                         <div class="media-button2">
@@ -255,7 +255,7 @@
     
     .media-button{
         width: 50%;
-        margin-top: 0;
+        margin-top: 10%;
     }
 
     .media-button2

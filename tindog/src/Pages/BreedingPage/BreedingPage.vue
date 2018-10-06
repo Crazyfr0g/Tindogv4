@@ -9,7 +9,7 @@
             <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
         </div>
 
-        <b-form-input type="text" placeholder="Search breed of dog ..." v-model="searchDog" class="search"></b-form-input>
+        <b-form-input type="text" placeholder="Search breed of dog ..." v-model="searchDog" class="search" style=" width: 75%; margin: 0 auto; margin-bottom: 10px;"/>
 
         <b-modal ref="addNewfeeds" hide-footer title="Available for breeding" no-close-on-backdrop>
             <div class="d-block text-center">
@@ -51,16 +51,10 @@
 
                 <div class="bcardContent1"> 
                     <b-media> 
-                        <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
+                        <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
                         <h5 class="mt-0"> {{ feed.nameofowner }}</h5>
                         <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyles"/>
                     </b-media> 
-
-                    
-                    <div class="media-button">
-                        <b-button class="d-inline" variant="outline-success">Like</b-button>
-                        <b-button class="d-inline" variant="outline-danger">Dislike</b-button>
-                    </div>
                 </div>
             
                 <div class="bcardContent2">  
@@ -70,14 +64,16 @@
                     <p>Age of dog: {{ feed.ageofdog }}</p>
                     <p>Sex: {{ feed.sexofdog }} </p>
                     <p>Information: {{ feed.infoofdog }}</p>
-                    <p>Time & Date: {{ feed.date }}</p>
+                    <p>Time & Date: {{ feed.date }}</p>  
 
-                    <div class="messageStyle">
-                        <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message owner</b-button>
-                    </div>    
+                    <div class="ownerStyle">
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)" style="width: 480px; margin: 0 auto; background-color: #2b5876;">Message owner</b-button>
+                    </div> 
+            
+                    
                 </div>      
-    
             </div>
+
         </b-card>   
 
         <b-modal ref="messageSend" hide-footer title="Message Owner" no-close-on-backdrop>
@@ -216,8 +212,6 @@
                 return this.feeds.filter((feed) => {
                     return feed.breedofdog.match(this.searchDog);
                 }).reverse()
-
-                
             }
         },
 
@@ -390,7 +384,8 @@
     .bcardContent1 .imageStyles
     {
         padding-left:50px; 
-        padding-top: 20px;
+        height: 200px;
+        width: 500px;
     }
 
 
@@ -398,13 +393,21 @@
     {
         width: 50%;
         padding-left: 50px; 
-        margin-top: 50px;
     }
 
-
-    .messageStyle .messageOwner
+    /* .ownerStyle .messageOwner
     {
-        width: 480px;
+        width: 75%;
+        background: linear-gradient(to right, #2b5876);
+    } */
+
+    .messageOwner
+    {
+        margin: 0 auto;
+    }
+
+    .ownerStyle
+    {
         margin: 0 auto;
     }
 
@@ -485,12 +488,12 @@
         margin-top: 75px;
     }
     
-    .search
+    /* .search
     {
         width: 75%;
         margin: 0 auto;
         margin-bottom: 10px;
-    }
+    } */
 
 </style>
     

@@ -90,26 +90,26 @@
                
             },
 
-            // retrieveProfile()
-            // {
-            //     this.uid = firebase.auth().currentUser.uid
+            retrieveProfile()
+            {
+                this.uid = firebase.auth().currentUser.uid
 
-            //     firebase.database().ref(`Users/${this.uid}`).on('value',snap => {
-            //             let feedArray = []
-            //             snap.forEach(childSnap => {
-            //                 let valEmail = childSnap.val().email
-            //                 let valFirstname = childSnap.val().firstname
-            //                 let valLastname = childSnap.val().lastname
-            //                 feedArray.push({ 
-            //                     email: valEmail,
-            //                     firstnames: valFirstname,
-            //                     lastnames: valLastname,
-            //                 }) 
-            //             })
-            //                 this.feeds = feedArray 
-            //         })
+                firebase.database().ref(`Users/${this.uid}`).on('value',snap => {
+                        let feedArray = []
+                        snap.forEach(childSnap => {
+                            let valEmail = childSnap.val().email
+                            let valFirstname = childSnap.val().firstname
+                            let valLastname = childSnap.val().lastname
+                            feedArray.push({ 
+                                email: valEmail,
+                                firstnames: valFirstname,
+                                lastnames: valLastname,
+                            }) 
+                        })
+                            this.feeds = feedArray 
+                    })
 
-            // }
+            }
             
           }
     }
@@ -125,6 +125,7 @@
     {
         transition: all 300ms ease-in-out;
     }
+    
     .fixed
     {
         background: linear-gradient(to right, #182848, #2b5876);

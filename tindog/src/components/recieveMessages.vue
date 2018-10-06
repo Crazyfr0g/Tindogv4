@@ -1,6 +1,8 @@
 <template>
     <div id="Style" class="paddingTop">
 
+        <b-form-input type="text" placeholder="Search name of sender" v-model="searchSender" class="search" style=" width: 60%; margin: 0 auto; margin-bottom: 10px;"/>
+
         <b-card class="bcardWidth" fluid v-b-scrollspy:scroll style="position:relative; height:500px; overflow-y:scroll;">               
             <div id="scroll">
                 <p class="messageCenter"><i>Recieved Messages</i></p>
@@ -74,6 +76,7 @@
                     displayName: '',
                     currentPage: null,
                     messageContent:'',
+                    searchSender: '',
                     
                 }
             },
@@ -83,11 +86,16 @@
                 this.gettingMessages()
             },
 
+                
             computed:
             {
-                feedList()
+                feedList:function()
                 {
-                    return this.feeds.reverse()       
+                    return this.feeds.filter((feed) => {
+                        return feed.sender.match(this.searchSender);
+                    }).reverse()
+
+                    
                 }
             },
 
@@ -281,6 +289,13 @@
         margin-bottom: 30px;
 
     }
+
+    /* .search
+    {
+        width: 60%;
+        margin: 0 auto;
+        margin-bottom: 10px;
+    } */
     
 </style>
 

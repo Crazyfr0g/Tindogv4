@@ -6,7 +6,7 @@
             </div>
 
             <div class="ImageStyle">  
-                <b-img center src="https://picsum.photos/125/125/?image=58" class="rounded-circle" alt="center image" width="200" /> <br>
+                <i class="fa fa-user-circle-o fa-5x" aria-hidden="true"></i><br/>
                 <b-button class="d-inline" variant="outline-success" @click="editProfile"><small>Edit</small></b-button>
                 <p class="profile">{{ displayName }} </p>
                 <p class="profile">{{ displayEmail }}</p>

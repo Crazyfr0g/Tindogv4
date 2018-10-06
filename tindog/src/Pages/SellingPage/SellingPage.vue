@@ -9,7 +9,7 @@
                 <i class="fa fa-plus-circle fa-3x" aria-hidden="true" @click="addfeed"></i>
             </div>
 
-            <b-form-input type="text" placeholder="Search breed of dog ..." v-model="searchDog" class="search"></b-form-input>
+            <b-form-input type="text" placeholder="Search breed of dog ..." v-model="searchDog" class="search" style=" width: 75%; margin: 0 auto; margin-bottom: 10px;"/>
 
             <b-modal ref="addNewfeeds" hide-footer title="Post News" no-close-on-backdrop>
                 <div class="d-block text-center">
@@ -54,7 +54,7 @@
 
                     <div class="bcardContent1"> 
                         <b-media> 
-                            <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" />
+                            <b-img slot="aside" blank blank-color="#ccc" width="64" alt="placeholder" class="rounded-circle" />
                             <h5 class="mt-0"> {{ feed.nameofowner }}</h5>
                             <b-img center :src="feed.image" fluid alt="Fluid image" class="imageStyles"/>
                         </b-media> 
@@ -73,10 +73,9 @@
                         <p>Sex: {{ feed.sexofdog }} </p>
                         <p>Information: {{ feed.content }} </p>
                         <p>Time & Date: {{ feed.date }} </p>
-                        <!-- <p>uid: {{ feed.uid }} </p> -->
 
-                        <div class="messageStyle">
-                            <b-button class="messageOwner" @click="clickMessage(feed.uid)">Message Seller</b-button>
+                        <div class="messageStyle" >
+                            <b-button class="messageOwner" @click="clickMessage(feed.uid)" style="width: 480px; margin: 0 auto; background-color: #2b5876;" >Message Seller</b-button>
                         </div>    
                     </div>      
         
@@ -379,7 +378,7 @@ import Navbar from '../../components/NavBar.vue'
         .media-button
         {
 
-            margin-top: 60px;
+            margin-top: 0px;
             font-weight: bold;
            
         }
@@ -424,13 +423,12 @@ import Navbar from '../../components/NavBar.vue'
            
         }
 
-
-        .messageStyle .messageOwner
+        /* .messageStyle .messageOwner
         {
             width: 480px;
             margin: 0 auto;
             background: linear-gradient(to right, #2b5876);
-        }
+        } */
 
         .bcardContent2 p
         {
@@ -448,6 +446,7 @@ import Navbar from '../../components/NavBar.vue'
             width: 300px;
             border-radius: 5px;
         }
+        
         .text-light
         {
             margin-right: 20px;
@@ -471,11 +470,12 @@ import Navbar from '../../components/NavBar.vue'
             z-index: 99;
         }
 
-        .search
+        /* .search
         {
             width: 75%;
             margin: 0 auto;
             margin-bottom: 10px;
-        }
+        } */
+
     </style>
     

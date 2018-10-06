@@ -22,13 +22,4 @@ export default {
     font-family: 'Segoe UI';
   }
 
-  #Home #PicStyle #Pic
-  {
-    margin-top: 10px;
-  }
-
-  #HomeLogin label
-  {
-  text-align: center;
-  }
 </style>

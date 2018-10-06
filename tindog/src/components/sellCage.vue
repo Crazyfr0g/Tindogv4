@@ -27,7 +27,7 @@
                     <p>Time & Date: {{ feed.date }}</p>
 
                     <div class="messageStyle" @click="clickMessage(feed.uid)">
-                        <b-button class="messageOwner">Message Seller</b-button>
+                        <b-button class="messageOwner" style="width: 480px; margin: 0 auto; background-color: #2b5876;">Message Seller</b-button>
                     </div>                      
                 </div>      
             </div>
@@ -288,14 +288,16 @@ export default
     {
         width: 50%;
         padding-left: 50px; 
+        margin-top: 40px;
     }
 
 
-    .messageStyle .messageOwner
+    /* .messageStyle .messageOwner
     {
         width: 480px;
         margin: 0 auto;
-    }
+        background: linear-gradient(to right, #2b5876);
+    } */
 
     .bcardContent2 p
     {
